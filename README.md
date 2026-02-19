@@ -1,4 +1,4 @@
-[index (1).html](https://github.com/user-attachments/files/25416901/index.1.html)
+[index-FIXED.html](https://github.com/user-attachments/files/25417262/index-FIXED.html)
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -30,8 +30,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 /* ── LAYOUT ── */
 .app{display:flex;min-height:100vh}
-.sidebar{width:var(--sidebar);background:linear-gradient(180deg,#1a2340 0%,#0d1526 100%);color:#fff;padding:0;position:fixed;height:100vh;overflow-y:auto;z-index:200;display:flex;flex-direction:column}
-.main{flex:1;margin-left:var(--sidebar);min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.sidebar{width:var(--sidebar);background:linear-gradient(180deg,#1a2340 0%,#0d1526 100%);color:#fff;padding:0;position:fixed;height:100vh;overflow-y:auto;overflow-x:hidden;z-index:200;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent}
+.sidebar::-webkit-scrollbar{width:6px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:10px}
+.sidebar::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.3)}
+.main{flex:1;margin-left:var(--sidebar);min-height:100vh;display:flex;flex-direction:column}
 .view{display:none;flex:1;flex-direction:column;min-height:0}
 .view.active{display:flex}
 
@@ -390,6 +394,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       <div class="sb-sec-lbl">Données</div>
       <div class="ni" onclick="openImportModal()"><span class="ni-ico">📥</span><span class="ni-lbl">Importer CSV/Excel</span></div>
       <div class="ni" onclick="exportData()"><span class="ni-ico">📤</span><span class="ni-lbl">Exporter CSV</span></div>
+      <div class="ni" onclick="openDeletedModal()"><span class="ni-ico">🗑️</span><span class="ni-lbl">Prospects supprimés</span><span class="nbadge b-gray" id="deleted-count">0</span></div>
     </div>
   </nav>
   <div class="sb-footer"><div class="sb-version">SIPHRO v2.0 — CHR Méditerranée</div></div>
@@ -656,6 +661,23 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 
+<!-- Prospects supprimés -->
+<div class="overlay" id="deleted-modal">
+  <div class="modal" style="max-width:900px">
+    <div class="modal-hdr">
+      <h2 class="modal-title">🗑️ Historique des suppressions</h2>
+      <button class="modal-close" onclick="closeDeletedModal()">×</button>
+    </div>
+    <div class="modal-body" style="max-height:70vh;overflow-y:auto">
+      <div id="deleted-list"></div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-secondary" onclick="closeDeletedModal()">Fermer</button>
+      <button class="btn btn-danger" onclick="clearDeletedHistory()" title="Vider définitivement l'historique">🗑️ Vider l'historique</button>
+    </div>
+  </div>
+</div>
+
 <!-- Notif toast -->
 <div class="notif" id="notif"><span id="notif-ico">✓</span><span id="notif-text"></span></div>
 
@@ -678,6 +700,7 @@ const MONTHS_FR=['janvier','février','mars','avril','mai','juin','juillet','ao�
 
 // ── STATE ──
 let prospects=[];
+let deletedProspects=[]; // 🗑️ TRAÇABILITÉ DES SUPPRESSIONS
 let currentFilter='all';
 let filterMode='cat'; // 'cat' | 'urgency'
 let searchQuery='';
@@ -828,6 +851,7 @@ function renderAll(){
   renderStats();
   renderSidebarCounts();
   renderProspects();
+  updateDeletedCount();
   if(currentView==='agenda')renderAgenda();
 }
 
@@ -1314,10 +1338,26 @@ function editProspect(id){closeProspectModal();openProspectModal(id);}
 function deleteProspect(id){
   const p=prospects.find(x=>x.id===id);
   if(!p)return;
-  if(!confirm(`Supprimer "${p.nom}" ?\nCette action est irréversible.`))return;
+  if(!confirm(`Supprimer "${p.nom}" ?\n\n⚠️ Cette action sera tracée dans l'historique des suppressions.`))return;
+  
+  // 🗑️ TRAÇABILITÉ : Enregistrer la suppression
+  const deletionRecord={
+    ...p,
+    deletedAt:new Date().toISOString(),
+    deletedBy:'Utilisateur', // À personnaliser si multi-utilisateurs
+    reason:'Suppression manuelle'
+  };
+  deletedProspects.push(deletionRecord);
+  
+  // Sauvegarder l'historique des suppressions dans localStorage
+  try{
+    localStorage.setItem('siphro_deleted_prospects',JSON.stringify(deletedProspects));
+  }catch(e){console.warn('Impossible de sauvegarder les suppressions:',e);}
+  
   prospects=prospects.filter(p=>p.id!==id);
   saveData();closeDV();renderAll();
-  showNotif('Prospect supprimé','warning');
+  showNotif(`"${p.nom}" supprimé et archivé`,'warning');
+  console.log('🗑️ Prospect supprimé:',deletionRecord);
 }
 
 function selectCat(c){
@@ -1434,6 +1474,93 @@ function confirmCompleteAction(){
 // ── IMPORT / EXPORT ──
 function openImportModal(){document.getElementById('import-modal').classList.add('open');}
 function closeImportModal(){document.getElementById('import-modal').classList.remove('open');}
+
+// ── PROSPECTS SUPPRIMÉS ──
+function openDeletedModal(){
+  const modal=document.getElementById('deleted-modal');
+  const list=document.getElementById('deleted-list');
+  
+  if(deletedProspects.length===0){
+    list.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--txt2)"><div style="font-size:48px;margin-bottom:16px;opacity:.5">🗑️</div><h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Aucune suppression enregistrée</h3><p style="font-size:13px">L\'historique des suppressions apparaîtra ici</p></div>';
+  }else{
+    // Trier par date de suppression (plus récent en premier)
+    const sorted=[...deletedProspects].sort((a,b)=>new Date(b.deletedAt)-new Date(a.deletedAt));
+    
+    list.innerHTML=sorted.map(p=>{
+      const deleteDate=new Date(p.deletedAt);
+      const cat=CAT_LABELS[p.categorie]||CAT_LABELS.autre;
+      return`
+        <div style="background:var(--bg3);border:1.5px solid var(--bl);border-radius:var(--r3);padding:16px 18px;margin-bottom:12px;border-left:4px solid var(--red)">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+            <div>
+              <div style="font-size:15px;font-weight:700;margin-bottom:4px">${esc(p.nom)}</div>
+              <span class="cbadge ${p.categorie}">${cat.i} ${cat.l}</span>
+            </div>
+            <button class="btn btn-xs btn-secondary" onclick="restoreProspect('${p.id}')" title="Restaurer ce prospect">↩️ Restaurer</button>
+          </div>
+          <div style="font-size:12px;color:var(--txt2);line-height:1.7">
+            ${p.contactNom?`<div><strong>Contact:</strong> ${esc(p.contactNom)}</div>`:''}
+            ${p.contactTel?`<div><strong>Tél:</strong> ${esc(p.contactTel)}</div>`:''}
+            ${p.formation?`<div><strong>Formation:</strong> ${esc(p.formation)}</div>`:''}
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--bl);font-size:11px;color:var(--txt3)">
+            🗑️ Supprimé le ${fmtDT(p.deletedAt)} ${p.deletedBy?`par ${esc(p.deletedBy)}`:''}<br>
+            ${p.prochaineAction?`⚠️ Action planifiée perdue: ${esc(p.prochaineAction.description)} (${fmtDate(p.prochaineAction.date)})`:''}
+            ${p.actionsEffectuees&&p.actionsEffectuees.length>0?`<br>📋 ${p.actionsEffectuees.length} action(s) effectuée(s) archivée(s)`:''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  modal.classList.add('open');
+  updateDeletedCount();
+}
+
+function closeDeletedModal(){
+  document.getElementById('deleted-modal').classList.remove('open');
+}
+
+function restoreProspect(id){
+  const idx=deletedProspects.findIndex(p=>p.id===id);
+  if(idx===-1){showNotif('Prospect introuvable','error');return;}
+  
+  const restored=deletedProspects[idx];
+  // Retirer les métadonnées de suppression
+  delete restored.deletedAt;
+  delete restored.deletedBy;
+  delete restored.reason;
+  
+  // Réinjecter dans les prospects actifs
+  prospects.push(restored);
+  deletedProspects.splice(idx,1);
+  
+  // Sauvegarder
+  saveData();
+  try{
+    localStorage.setItem('siphro_deleted_prospects',JSON.stringify(deletedProspects));
+  }catch(e){}
+  
+  showNotif(`"${restored.nom}" restauré avec succès`,'success');
+  renderAll();
+  openDeletedModal(); // Rafraîchir la modale
+}
+
+function clearDeletedHistory(){
+  if(!confirm(`Vider définitivement l'historique des ${deletedProspects.length} suppressions ?\n\n⚠️ Cette action est irréversible.`))return;
+  deletedProspects=[];
+  try{
+    localStorage.removeItem('siphro_deleted_prospects');
+  }catch(e){}
+  showNotif('Historique vidé','warning');
+  closeDeletedModal();
+  updateDeletedCount();
+}
+
+function updateDeletedCount(){
+  const badge=document.getElementById('deleted-count');
+  if(badge)badge.textContent=deletedProspects.length;
+}
 function handleFileSelect(e){
   const file=e.target.files[0];if(!file)return;
   const ext=file.name.split('.').pop().toLowerCase();
@@ -1493,7 +1620,17 @@ document.addEventListener('click',e=>{
 });
 
 // ── INIT ──
-document.addEventListener('DOMContentLoaded',loadData);
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{
+  // Charger l'historique des suppressions depuis localStorage
+  try{
+    const saved=localStorage.getItem('siphro_deleted_prospects');
+    if(saved)deletedProspects=JSON.parse(saved);
+    console.log(`📋 ${deletedProspects.length} prospects supprimés en historique`);
+  }catch(e){console.warn('Erreur chargement suppressions:',e);}
+  
+  loadData();
+});
 </script>
 </body>
 </html>
