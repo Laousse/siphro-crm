@@ -1,4 +1,4 @@
-[index (1).html](https://github.com/user-attachments/files/25421534/index.1.html)
+[index (1).html](https://github.com/user-attachments/files/25422855/index.1.html)
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -34,7 +34,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 /* ── LAYOUT ── */
 .app{display:flex;height:100vh;overflow:hidden}
 .sidebar{width:var(--sidebar);background:linear-gradient(180deg,#1a2340 0%,#0d1526 100%);color:#fff;padding:0;position:fixed;height:100vh;overflow-y:auto;overflow-x:hidden;z-index:200;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent}
-.sidebar::-webkit-scrollbar{width:6px}
+.sidebar::-webkit-scrollbar{width:4px}
 .sidebar::-webkit-scrollbar-track{background:transparent}
 .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:10px}
 .sidebar::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.3)}
@@ -43,84 +43,131 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .view.active{display:flex}
 #dash-content{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
 
-/* ── SIDEBAR ── */
-.sb-brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
-.sb-brand-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.sb-icon{width:40px;height:40px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 14px rgba(59,130,246,.4)}
-.sb-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;line-height:1}
-.sb-sub{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1.2px;text-transform:uppercase}
-.sb-sync{font-size:11px;padding:6px 10px;background:rgba(255,255,255,.07);border-radius:8px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:6px}
-.sb-nav{padding:16px 12px;flex:1}
-.sb-sec{margin-bottom:24px}
-.sb-sec-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.28);padding:0 10px;margin-bottom:6px;font-weight:700}
-.ni{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .18s;margin-bottom:1px;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;position:relative}
+/* ── SIDEBAR (compact) ── */
+.sb-brand{padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-brand-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sb-icon{width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 14px rgba(59,130,246,.4)}
+.sb-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;line-height:1}
+.sb-sub{font-size:9.5px;color:rgba(255,255,255,.4);letter-spacing:1.2px;text-transform:uppercase}
+.sb-sync{font-size:10.5px;padding:5px 8px;background:rgba(255,255,255,.07);border-radius:7px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:5px}
+.sb-nav{padding:10px 10px;flex:1}
+.sb-sec{margin-bottom:18px}
+.sb-sec-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1.8px;color:rgba(255,255,255,.28);padding:0 8px;margin-bottom:4px;font-weight:700}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:1px;color:rgba(255,255,255,.6);font-size:12.5px;font-weight:500;position:relative}
 .ni:hover{background:rgba(255,255,255,.07);color:#fff}
 .ni.active{background:rgba(59,130,246,.22);color:#fff;border-left:3px solid #60a5fa}
-.ni-ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.ni-ico{font-size:14px;width:18px;text-align:center;flex-shrink:0}
 .ni-lbl{flex:1}
-.nbadge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;min-width:20px;text-align:center;background:rgba(239,68,68,.85);color:#fff}
+.nbadge{margin-left:auto;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:8px;min-width:18px;text-align:center;background:rgba(239,68,68,.85);color:#fff}
 .nbadge.b-blue{background:rgba(59,130,246,.75)}
 .nbadge.b-green{background:rgba(5,150,105,.75)}
 .nbadge.b-orange{background:rgba(217,119,6,.8)}
 .nbadge.b-gray{background:rgba(100,116,139,.6)}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sb-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,.07)}
-.sb-version{font-size:10px;color:rgba(255,255,255,.22);text-align:center}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sb-footer{padding:10px 16px;border-top:1px solid rgba(255,255,255,.07)}
+.sb-version{font-size:9.5px;color:rgba(255,255,255,.22);text-align:center}
 
-/* ── HEADER ── */
-.page-hdr{background:var(--bg2);border-bottom:1px solid var(--bl);padding:18px 32px;flex-shrink:0;z-index:100}
-.hdr-row{display:flex;justify-content:space-between;align-items:center;gap:16px}
-.page-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;letter-spacing:-.3px}
-.page-sub{color:var(--txt2);font-size:12.5px;margin-top:2px}
-.hdr-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
-.sync-pill{font-size:11.5px;font-weight:600;padding:6px 14px;background:var(--bg3);border-radius:20px;border:1px solid var(--bl);white-space:nowrap}
+/* ══════════════════════════════════════
+   TOP BAR — COMPACT UNIFIED CHROME
+   Remplace : header + stats bar + filters
+   Hauteur totale cible : ~112px au lieu de ~230px
+══════════════════════════════════════ */
+
+/* Barre principale (ligne 1) */
+.top-bar{
+  background:var(--bg2);
+  border-bottom:1px solid var(--bl);
+  flex-shrink:0;
+  z-index:100;
+}
+
+/* Ligne 1 : titre + stats chips + actions */
+.tb-row1{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 24px;
+  border-bottom:1px solid var(--bl);
+}
+.tb-title-wrap{display:flex;flex-direction:column;min-width:0}
+.tb-title{font-family:'Fraunces',serif;font-size:20px;font-weight:700;letter-spacing:-.3px;line-height:1.1;white-space:nowrap}
+.tb-sub{color:var(--txt3);font-size:10.5px;margin-top:1px;white-space:nowrap}
+
+/* Mini stats chips inline */
+.tb-stats{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:nowrap;overflow:hidden}
+.tb-chip{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:20px;
+  font-size:11.5px;font-weight:700;
+  border:1.5px solid var(--bl);
+  background:var(--bg);
+  cursor:pointer;transition:all .18s;white-space:nowrap;
+}
+.tb-chip:hover{border-color:var(--bm);box-shadow:var(--sh1);transform:translateY(-1px)}
+.tb-chip.active{background:var(--blue-l);border-color:var(--blue);color:var(--blue)}
+.tb-chip.c-red.active{background:var(--red-l);border-color:var(--red);color:var(--red)}
+.tb-chip.c-orange.active{background:var(--orange-l);border-color:var(--orange);color:var(--orange)}
+.tb-chip.c-green.active{background:var(--green-l);border-color:var(--green);color:var(--green)}
+.tb-chip-val{font-size:15px;font-weight:800;color:var(--txt)}
+.tb-chip.active .tb-chip-val{color:inherit}
+.tb-chip-lbl{font-size:10px;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+
+.tb-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.sync-pill{font-size:10.5px;font-weight:600;padding:5px 11px;background:var(--bg3);border-radius:16px;border:1px solid var(--bl);white-space:nowrap}
+
+/* Ligne 2 : recherche + filtres tabs + tri + vues */
+.tb-row2{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 24px;
+}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-wrap input{width:100%;padding:8px 14px 8px 36px;border:1.5px solid var(--bl);border-radius:20px;font-size:13px;font-family:inherit;background:var(--bg);transition:all .2s;color:var(--txt)}
+.search-wrap input:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.search-wrap .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:15px}
+.search-wrap .clear-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--txt3);font-size:16px;display:none;padding:0;line-height:1}
+.search-wrap input:not(:placeholder-shown)~.clear-btn{display:block}
+
+.ftabs{display:flex;gap:3px;background:var(--bg3);padding:3px;border-radius:10px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.ftabs::-webkit-scrollbar{display:none}
+.ftab{padding:6px 11px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;transition:all .15s;background:transparent;border:none;color:var(--txt2);display:flex;align-items:center;gap:5px;font-family:inherit;white-space:nowrap}
+.ftab:hover{color:var(--txt);background:rgba(255,255,255,.5)}
+.ftab.active{background:#fff;color:var(--txt);box-shadow:var(--sh1)}
+.ftab .cnt{background:var(--bg4);padding:1px 6px;border-radius:6px;font-size:9.5px;font-weight:700}
+.ftab.active .cnt{background:var(--blue-l);color:var(--blue)}
+
+.sort-sel{padding:7px 10px;border:1.5px solid var(--bl);border-radius:8px;font-size:12px;font-family:inherit;background:var(--bg);cursor:pointer;color:var(--txt);outline:none;flex-shrink:0}
+.sort-sel:focus{border-color:var(--blue)}
+.view-tog{display:flex;gap:2px;background:var(--bg3);padding:3px;border-radius:8px;flex-shrink:0}
+.vtb{width:30px;height:30px;border:none;background:transparent;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--txt2);transition:all .15s}
+.vtb.active{background:#fff;color:var(--txt);box-shadow:var(--sh1)}
 
 /* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:var(--r2);font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;border:none;font-family:inherit;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r2);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;border:none;font-family:inherit;white-space:nowrap}
 .btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}.btn-primary:hover{background:var(--blue-d);transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.4)}
 .btn-secondary{background:var(--bg3);color:var(--txt);border:1.5px solid var(--bl)}.btn-secondary:hover{background:var(--bl)}
 .btn-green{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(5,150,105,.3)}.btn-green:hover{background:#047857}
 .btn-danger{background:var(--red-l);color:var(--red);border:1px solid #fecaca}.btn-danger:hover{background:var(--red);color:#fff}
-.btn-sm{padding:7px 13px;font-size:12px}
-.btn-xs{padding:5px 10px;font-size:11px}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-xs{padding:4px 9px;font-size:11px}
 .ibt{width:30px;height:30px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:13px;transition:all .18s;display:flex;align-items:center;justify-content:center;color:var(--txt2)}
 .ibt:hover{background:var(--bl)}.ibt.del:hover{background:var(--red-l);color:var(--red)}
 
-/* ── STATS BAR ── */
-.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:18px 32px;background:var(--bg2);border-bottom:1px solid var(--bl);flex-shrink:0}
-.stat{background:var(--bg);border:1.5px solid var(--bl);border-radius:var(--r3);padding:16px 18px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s}
-.stat:hover{box-shadow:var(--sh2);transform:translateY(-2px);border-color:var(--bm)}
-.stat.active-filter{border-color:var(--blue);background:var(--blue-l)}
-.stat::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;border-radius:0 2px 2px 0}
-.stat.s-total::before{background:var(--blue)}.stat.s-retard::before{background:var(--red)}.stat.s-today::before{background:var(--orange)}.stat.s-nego::before{background:var(--green)}.stat.s-orga::before{background:var(--purple)}
-.stat-val{font-size:28px;font-weight:800;line-height:1;margin-bottom:3px}
-.stat-lbl{font-size:10.5px;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
-.stat-ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:30px;opacity:.1}
+/* ── PAGE CONTENT — Zone prospect avec scroll ── */
+.page-content{
+  padding:20px 24px 40px;
+  flex:1;
+  overflow-y:auto;
+  min-height:0;
+  /* Scrollbar élégante */
+  scrollbar-width:thin;
+  scrollbar-color:var(--bm) transparent;
+}
+.page-content::-webkit-scrollbar{width:6px}
+.page-content::-webkit-scrollbar-track{background:transparent}
+.page-content::-webkit-scrollbar-thumb{background:var(--bm);border-radius:10px}
+.page-content::-webkit-scrollbar-thumb:hover{background:var(--blue)}
 
-/* ── FILTERS BAR ── */
-.filters-bar{display:flex;gap:10px;padding:14px 32px;background:var(--bg2);border-bottom:1px solid var(--bl);align-items:center;flex-wrap:wrap;flex-shrink:0}
-.search-wrap{flex:1;min-width:240px;position:relative}
-.search-wrap input{width:100%;padding:11px 16px 11px 42px;border:1.5px solid var(--bl);border-radius:var(--r4);font-size:13.5px;font-family:inherit;background:var(--bg);transition:all .2s;color:var(--txt)}
-.search-wrap input:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
-.search-wrap .si{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:16px}
-.search-wrap .clear-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--txt3);font-size:18px;display:none;padding:0;line-height:1}
-.search-wrap input:not(:placeholder-shown)~.clear-btn{display:block}
-.ftabs{display:flex;gap:4px;background:var(--bg3);padding:4px;border-radius:var(--r3);flex-wrap:wrap}
-.ftab{padding:8px 14px;border-radius:var(--r2);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;background:transparent;border:none;color:var(--txt2);display:flex;align-items:center;gap:6px;font-family:inherit;white-space:nowrap}
-.ftab:hover{color:var(--txt);background:rgba(255,255,255,.5)}
-.ftab.active{background:#fff;color:var(--txt);box-shadow:var(--sh1)}
-.ftab .cnt{background:var(--bg4);padding:1px 7px;border-radius:8px;font-size:10px;font-weight:700}
-.ftab.active .cnt{background:var(--blue-l);color:var(--blue)}
-.sort-sel{padding:9px 12px;border:1.5px solid var(--bl);border-radius:var(--r2);font-size:12.5px;font-family:inherit;background:var(--bg);cursor:pointer;color:var(--txt);outline:none}
-.sort-sel:focus{border-color:var(--blue)}
-.view-tog{display:flex;gap:3px;background:var(--bg3);padding:3px;border-radius:var(--r2)}
-.vtb{width:32px;height:32px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--txt2);transition:all .18s}
-.vtb.active{background:#fff;color:var(--txt);box-shadow:var(--sh1)}
-
-/* ── PAGE CONTENT ── */
-.page-content{padding:24px 32px 60px;flex:1;overflow-y:auto;min-height:0}
-.prospects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px}
-.prospects-list{display:flex;flex-direction:column;gap:8px}
+/* Grille avec plus de marge confortable */
+.prospects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.prospects-list{display:flex;flex-direction:column;gap:6px}
 
 /* ── CARDS ── */
 .card{background:var(--bg2);border-radius:var(--r4);border:1.5px solid var(--bl);overflow:hidden;transition:all .25s;cursor:pointer;position:relative}
@@ -335,27 +382,34 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .score-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:12px;font-size:10.5px;font-weight:700;background:var(--bg3);border:1px solid var(--bl);color:var(--txt2)}
 
 /* ── RESPONSIVE ── */
+@media(max-width:1200px){
+  .tb-chip-lbl{display:none}
+  .tb-chip{padding:5px 8px}
+}
 @media(max-width:1100px){
   .dv-body{grid-template-columns:1fr}
   .dv-aside{flex-direction:row;flex-wrap:wrap}
   .dv-aside>*{flex:1;min-width:280px}
 }
-@media(max-width:900px){
+@media(max-width:960px){
   :root{--sidebar:220px}
-  .stats-bar{grid-template-columns:repeat(3,1fr)}
   .dv-info-grid{grid-template-columns:repeat(2,1fr)}
+  .tb-stats{gap:4px}
+}
+@media(max-width:760px){
+  .tb-stats{display:none}
 }
 @media(max-width:680px){
   :root{--sidebar:0px}
   .sidebar{display:none}
   .main{margin-left:0}
-  .page-content,.filters-bar,.stats-bar,.page-hdr,.agenda-body{padding-left:16px;padding-right:16px}
-  .stats-bar{grid-template-columns:1fr 1fr}
+  .page-content,.agenda-body{padding-left:14px;padding-right:14px}
+  .tb-row1,.tb-row2{padding-left:14px;padding-right:14px}
   .frow{grid-template-columns:1fr}
   .app,.main{height:auto;overflow:visible}
   .view.active{height:auto;overflow:visible}
   #dash-content{overflow:visible}
-  .page-content{overflow:visible;height:auto;min-height:calc(100vh - 260px)}
+  .page-content{overflow:visible;height:auto;min-height:calc(100vh - 180px)}
 }
 
 /* ── SCORE RING ── */
@@ -647,53 +701,80 @@ body.readonly-mode .readonly-banner{display:flex}
   <div id="detail-view" class="detail-view"></div>
   <!-- Contenu principal dashboard -->
   <div id="dash-content">
-    <header class="page-hdr">
-      <div class="hdr-row">
-        <div>
-          <h1 class="page-title">Tableau de bord</h1>
-          <p class="page-sub">Gérez vos prospects et relances commerciales</p>
+
+    <!-- ══ TOP BAR COMPACT (remplace header + stats + filtres) ══ -->
+    <div class="top-bar">
+      <!-- Ligne 1 : titre + chips stats + actions -->
+      <div class="tb-row1">
+        <div class="tb-title-wrap">
+          <div class="tb-title">Prospects</div>
+          <div class="tb-sub">CHR Méditerranée</div>
         </div>
-        <div class="hdr-actions">
-          <span class="sync-pill" id="sync-badge">🔄 Chargement...</span>
-          <button class="btn btn-secondary btn-sm readonly-hide" onclick="openImportModal()">📥 Importer</button>
-          <button class="btn btn-primary btn-sm readonly-hide" onclick="openProspectModal()">+ Nouveau prospect</button>
+        <!-- Mini stats chips cliquables -->
+        <div class="tb-stats">
+          <div class="tb-chip" id="chip-total" onclick="applyFilter('all')" title="Tous les prospects">
+            <span class="tb-chip-val" id="stat-total">0</span>
+            <span class="tb-chip-lbl">Total</span>
+          </div>
+          <div class="tb-chip c-red" id="chip-overdue" onclick="applyFilter('overdue')" title="En retard">
+            <span>🔴</span>
+            <span class="tb-chip-val" id="stat-retard">0</span>
+            <span class="tb-chip-lbl">Retard</span>
+          </div>
+          <div class="tb-chip c-orange" id="chip-today" onclick="applyFilter('today')" title="Action aujourd'hui">
+            <span>🟡</span>
+            <span class="tb-chip-val" id="stat-today">0</span>
+            <span class="tb-chip-lbl">Auj.</span>
+          </div>
+          <div class="tb-chip c-green" id="chip-nego" onclick="applyFilter('negociation')" title="En négociation">
+            <span>🤝</span>
+            <span class="tb-chip-val" id="stat-nego">0</span>
+            <span class="tb-chip-lbl">Négo</span>
+          </div>
+          <div class="tb-chip" id="chip-orga" onclick="applyFilter('organisation')" title="En organisation">
+            <span>📋</span>
+            <span class="tb-chip-val" id="stat-orga">0</span>
+            <span class="tb-chip-lbl">Orga</span>
+          </div>
+        </div>
+        <!-- Actions -->
+        <div class="tb-actions">
+          <span class="sync-pill" id="sync-badge">🔄</span>
+          <button class="btn btn-secondary btn-sm readonly-hide" onclick="openImportModal()">📥</button>
+          <button class="btn btn-primary btn-sm readonly-hide" onclick="openProspectModal()">＋ Prospect</button>
         </div>
       </div>
-    </header>
-    <div class="stats-bar">
-      <div class="stat s-total" id="stat-total-box" onclick="applyFilter('all')"><div class="stat-val" id="stat-total">0</div><div class="stat-lbl">Total Prospects</div><span class="stat-ico">📋</span></div>
-      <div class="stat s-retard" id="stat-overdue-box" onclick="applyFilter('overdue')"><div class="stat-val" id="stat-retard">0</div><div class="stat-lbl">En retard</div><span class="stat-ico">⚠️</span></div>
-      <div class="stat s-today" id="stat-today-box" onclick="applyFilter('today')"><div class="stat-val" id="stat-today">0</div><div class="stat-lbl">Aujourd'hui</div><span class="stat-ico">📅</span></div>
-      <div class="stat s-nego" id="stat-nego-box" onclick="applyFilter('negociation')"><div class="stat-val" id="stat-nego">0</div><div class="stat-lbl">En négociation</div><span class="stat-ico">🤝</span></div>
-      <div class="stat s-orga" id="stat-orga-box" onclick="applyFilter('organisation')"><div class="stat-val" id="stat-orga">0</div><div class="stat-lbl">En organisation</div><span class="stat-ico">📋</span></div>
-    </div>
-    <div class="filters-bar">
-      <div class="search-wrap">
-        <span class="si">🔍</span>
-        <input type="text" id="search-input" placeholder="Rechercher nom, contact, ville, email, téléphone, formation..." oninput="handleSearch(this.value)" autocomplete="off">
-        <button class="clear-btn" onclick="clearSearch()">×</button>
-      </div>
-      <div class="ftabs" id="filter-tabs">
-        <button class="ftab active" onclick="setFilter('all')" data-f="all">Tous <span class="cnt" id="fc-all">0</span></button>
-        <button class="ftab" onclick="setFilter('organisation')" data-f="organisation">📋 Orga <span class="cnt" id="fc-organisation">0</span></button>
-        <button class="ftab" onclick="setFilter('negociation')" data-f="negociation">🤝 Négo <span class="cnt" id="fc-negociation">0</span></button>
-        <button class="ftab" onclick="setFilter('chaud')" data-f="chaud">🔥 Chaud <span class="cnt" id="fc-chaud">0</span></button>
-        <button class="ftab" onclick="setFilter('autre')" data-f="autre">📌 Autre <span class="cnt" id="fc-autre">0</span></button>
-        <button class="ftab" onclick="setFilter('gagne')" data-f="gagne">✅ Gagné <span class="cnt" id="fc-gagne">0</span></button>
-      </div>
-      <select class="sort-sel" id="sort-select" onchange="renderProspects()">
-        <option value="urgency">🔥 Urgence</option>
-        <option value="name">🔤 Nom A→Z</option>
-        <option value="date-asc">📅 Date ↑</option>
-        <option value="date-desc">📅 Date ↓</option>
-        <option value="recent">🕐 Récent</option>
-        <option value="hist">📊 + d'actions</option>
-      </select>
-      <div class="view-tog">
-        <button class="vtb active" id="vt-grid" onclick="setViewMode('grid')" title="Grille">⊞</button>
-        <button class="vtb" id="vt-list" onclick="setViewMode('list')" title="Liste">☰</button>
+      <!-- Ligne 2 : recherche + filtres + tri + vue -->
+      <div class="tb-row2">
+        <div class="search-wrap">
+          <span class="si">🔍</span>
+          <input type="text" id="search-input" placeholder="Rechercher un prospect, contact, ville, email…" oninput="handleSearch(this.value)" autocomplete="off">
+          <button class="clear-btn" onclick="clearSearch()">×</button>
+        </div>
+        <div class="ftabs" id="filter-tabs">
+          <button class="ftab active" onclick="setFilter('all')" data-f="all">Tous <span class="cnt" id="fc-all">0</span></button>
+          <button class="ftab" onclick="setFilter('organisation')" data-f="organisation">📋 <span class="cnt" id="fc-organisation">0</span></button>
+          <button class="ftab" onclick="setFilter('negociation')" data-f="negociation">🤝 <span class="cnt" id="fc-negociation">0</span></button>
+          <button class="ftab" onclick="setFilter('chaud')" data-f="chaud">🔥 <span class="cnt" id="fc-chaud">0</span></button>
+          <button class="ftab" onclick="setFilter('autre')" data-f="autre">📌 <span class="cnt" id="fc-autre">0</span></button>
+          <button class="ftab" onclick="setFilter('gagne')" data-f="gagne">✅ <span class="cnt" id="fc-gagne">0</span></button>
+        </div>
+        <select class="sort-sel" id="sort-select" onchange="renderProspects()">
+          <option value="urgency">🔥 Urgence</option>
+          <option value="name">🔤 Nom A→Z</option>
+          <option value="date-asc">📅 Date ↑</option>
+          <option value="date-desc">📅 Date ↓</option>
+          <option value="recent">🕐 Récent</option>
+          <option value="hist">📊 + d'actions</option>
+        </select>
+        <div class="view-tog">
+          <button class="vtb active" id="vt-grid" onclick="setViewMode('grid')" title="Grille">⊞</button>
+          <button class="vtb" id="vt-list" onclick="setViewMode('list')" title="Liste">☰</button>
+        </div>
       </div>
     </div>
+
+    <!-- Zone de scroll prospects -->
     <div class="page-content" id="page-content">
       <div id="prospects-container"></div>
       <div class="empty" id="empty-state" style="display:none">
@@ -702,35 +783,39 @@ body.readonly-mode .readonly-banner{display:flex}
         <p class="empty-sub">Modifiez votre recherche ou ajoutez un nouveau prospect</p>
         <div style="display:flex;gap:10px;justify-content:center">
           <button class="btn btn-secondary btn-sm" onclick="clearSearch()">🔄 Effacer la recherche</button>
-          <button class="btn btn-primary btn-sm" onclick="openProspectModal()">+ Ajouter</button>
+          <button class="btn btn-primary btn-sm readonly-hide" onclick="openProspectModal()">+ Ajouter</button>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
 <!-- ── AGENDA VIEW ── -->
 <div class="view" id="view-agenda">
-  <header class="page-hdr">
-    <div class="hdr-row">
-      <div><h1 class="page-title">Agenda</h1><p class="page-sub">Vos relances et actions planifiées par créneaux horaires</p></div>
-      <div class="hdr-actions">
-        <span class="sync-pill" id="sync-badge2">✅ Sync</span>
-        <button class="btn btn-primary btn-sm" onclick="openActionModal(null,true)">+ Nouvelle tâche</button>
+  <div class="top-bar">
+    <div class="tb-row1" style="padding:10px 24px">
+      <div class="tb-title-wrap">
+        <div class="tb-title">Agenda</div>
+        <div class="tb-sub">Actions planifiées</div>
       </div>
-    </div>
-  </header>
-  <div class="agenda-nav">
-    <div class="week-nav">
-      <button onclick="agNav(-1)">← Préc</button>
-      <div class="week-lbl" id="ag-label">...</div>
-      <button onclick="agNav(1)">Suiv →</button>
-      <button onclick="agToday()" style="background:var(--blue-l);color:var(--blue);border-color:var(--blue)">Aujourd'hui</button>
-    </div>
-    <div class="ag-toggle">
-      <button class="ag-btn" id="ag-list" onclick="setAgView('list')">📋 Liste</button>
-      <button class="ag-btn active" id="ag-week" onclick="setAgView('week')">📅 Semaine</button>
-      <button class="ag-btn" id="ag-day" onclick="setAgView('day')">🕐 Jour</button>
+      <div class="tb-stats" style="justify-content:flex-start">
+        <div class="week-nav">
+          <button onclick="agNav(-1)" style="padding:6px 10px;border:1.5px solid var(--bl);background:var(--bg);border-radius:8px;cursor:pointer;font-weight:600;font-size:12px;font-family:inherit;transition:all .2s;color:var(--txt)">← Préc</button>
+          <div class="week-lbl" id="ag-label" style="font-size:13px;font-weight:700;min-width:170px;text-align:center;color:var(--txt)">...</div>
+          <button onclick="agNav(1)" style="padding:6px 10px;border:1.5px solid var(--bl);background:var(--bg);border-radius:8px;cursor:pointer;font-weight:600;font-size:12px;font-family:inherit;transition:all .2s;color:var(--txt)">Suiv →</button>
+          <button onclick="agToday()" style="padding:6px 10px;background:var(--blue-l);color:var(--blue);border:1.5px solid var(--blue);border-radius:8px;cursor:pointer;font-weight:700;font-size:12px;font-family:inherit">Aujourd'hui</button>
+        </div>
+      </div>
+      <div class="tb-actions">
+        <span class="sync-pill" id="sync-badge2">✅ Sync</span>
+        <div class="ag-toggle" style="display:flex;gap:3px;background:var(--bg3);padding:3px;border-radius:8px">
+          <button class="ag-btn" id="ag-list" onclick="setAgView('list')" style="padding:6px 12px;border:none;background:transparent;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;color:var(--txt2);transition:all .2s">📋 Liste</button>
+          <button class="ag-btn active" id="ag-week" onclick="setAgView('week')" style="padding:6px 12px;border:none;background:#fff;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;color:var(--txt);box-shadow:var(--sh1);transition:all .2s">📅 Semaine</button>
+          <button class="ag-btn" id="ag-day" onclick="setAgView('day')" style="padding:6px 12px;border:none;background:transparent;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;color:var(--txt2);transition:all .2s">🕐 Jour</button>
+        </div>
+        <button class="btn btn-primary btn-sm readonly-hide" onclick="openActionModal(null,true)">+ Tâche</button>
+      </div>
     </div>
   </div>
   <div class="agenda-body" id="agenda-content"></div>
@@ -1274,7 +1359,6 @@ function setFilter(f){
 }
 
 function applyFilter(f){
-  // Works from sidebar AND stat cards — always goes to dashboard
   showView('dashboard');
   if(['overdue','today','week'].includes(f)){
     filterMode='urgency';currentFilter=f;
@@ -1283,6 +1367,10 @@ function applyFilter(f){
     filterMode='cat';currentFilter=f;
     document.querySelectorAll('.ftab').forEach(t=>t.classList.toggle('active',t.dataset.f===f));
   }
+  // Highlight the matching chip
+  const chipMap={all:'chip-total',overdue:'chip-overdue',today:'chip-today',negociation:'chip-nego',organisation:'chip-orga'};
+  document.querySelectorAll('.tb-chip').forEach(c=>c.classList.remove('active'));
+  if(chipMap[f])document.getElementById(chipMap[f])?.classList.add('active');
   renderProspects();
 }
 
