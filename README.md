@@ -1,9 +1,12 @@
-[index-FIXED.html](https://github.com/user-attachments/files/25417262/index-FIXED.html)
+[index (1).html](https://github.com/user-attachments/files/25421427/index.1.html)
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="SIPHRO CRM — Suivi commercial CHR Méditerranée">
+<meta name="robots" content="noindex, nofollow">
 <title>SIPHRO CRM — Suivi Commercial</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -29,15 +32,16 @@ html{scroll-behavior:smooth}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);line-height:1.6;min-height:100vh;font-size:14px}
 
 /* ── LAYOUT ── */
-.app{display:flex;min-height:100vh}
+.app{display:flex;height:100vh;overflow:hidden}
 .sidebar{width:var(--sidebar);background:linear-gradient(180deg,#1a2340 0%,#0d1526 100%);color:#fff;padding:0;position:fixed;height:100vh;overflow-y:auto;overflow-x:hidden;z-index:200;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent}
 .sidebar::-webkit-scrollbar{width:6px}
 .sidebar::-webkit-scrollbar-track{background:transparent}
 .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:10px}
 .sidebar::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.3)}
-.main{flex:1;margin-left:var(--sidebar);min-height:100vh;display:flex;flex-direction:column}
-.view{display:none;flex:1;flex-direction:column;min-height:0}
+.main{flex:1;margin-left:var(--sidebar);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.view{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0}
 .view.active{display:flex}
+#dash-content{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
 
 /* ── SIDEBAR ── */
 .sb-brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
@@ -64,7 +68,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .sb-version{font-size:10px;color:rgba(255,255,255,.22);text-align:center}
 
 /* ── HEADER ── */
-.page-hdr{background:var(--bg2);border-bottom:1px solid var(--bl);padding:18px 32px;position:sticky;top:0;z-index:100;flex-shrink:0}
+.page-hdr{background:var(--bg2);border-bottom:1px solid var(--bl);padding:18px 32px;flex-shrink:0;z-index:100}
 .hdr-row{display:flex;justify-content:space-between;align-items:center;gap:16px}
 .page-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;letter-spacing:-.3px}
 .page-sub{color:var(--txt2);font-size:12.5px;margin-top:2px}
@@ -114,7 +118,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .vtb.active{background:#fff;color:var(--txt);box-shadow:var(--sh1)}
 
 /* ── PAGE CONTENT ── */
-.page-content{padding:24px 32px;flex:1;overflow-y:auto}
+.page-content{padding:24px 32px 60px;flex:1;overflow-y:auto;min-height:0}
 .prospects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px}
 .prospects-list{display:flex;flex-direction:column;gap:8px}
 
@@ -164,7 +168,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .empty-title{font-family:'Fraunces',serif;font-size:22px;color:var(--txt);margin-bottom:8px}
 .empty-sub{font-size:13.5px;margin-bottom:24px}
 
-/* ── AGENDA ── */
 .agenda-nav{display:flex;align-items:center;gap:14px;padding:14px 32px;background:var(--bg2);border-bottom:1px solid var(--bl);flex-shrink:0;flex-wrap:wrap}
 .week-nav{display:flex;align-items:center;gap:8px}
 .week-nav button{padding:7px 12px;border:1.5px solid var(--bl);background:var(--bg2);border-radius:var(--r2);cursor:pointer;font-weight:600;font-size:12px;font-family:inherit;transition:all .2s;color:var(--txt)}
@@ -173,7 +176,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .ag-toggle{display:flex;gap:4px;background:var(--bg3);padding:3px;border-radius:var(--r2);margin-left:auto}
 .ag-btn{padding:7px 14px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:600;font-family:inherit;color:var(--txt2);transition:all .2s}
 .ag-btn.active{background:#fff;color:var(--txt);box-shadow:var(--sh1)}
-.agenda-body{flex:1;overflow:auto;padding:0 32px 32px}
+.agenda-body{flex:1;overflow-y:auto;overflow-x:auto;padding:0 32px 32px;min-height:0}
 
 /* ── WEEK/DAY GRID ── */
 .week-grid{display:grid;grid-template-columns:64px repeat(7,1fr);min-width:860px;border-top:1px solid var(--bl)}
@@ -349,6 +352,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   .page-content,.filters-bar,.stats-bar,.page-hdr,.agenda-body{padding-left:16px;padding-right:16px}
   .stats-bar{grid-template-columns:1fr 1fr}
   .frow{grid-template-columns:1fr}
+  .app,.main{height:auto;overflow:visible}
+  .view.active{height:auto;overflow:visible}
+  #dash-content{overflow:visible}
+  .page-content{overflow:visible;height:auto;min-height:calc(100vh - 260px)}
 }
 
 /* ── SCORE RING ── */
@@ -356,9 +363,231 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .score-dots{display:flex;gap:3px}
 .sdot{width:8px;height:8px;border-radius:50%;background:var(--bl)}
 .sdot.on.red{background:var(--red)}.sdot.on.orange{background:var(--orange)}.sdot.on.green{background:var(--green)}
+
+/* ── MODE LECTURE SEULE ── */
+body.readonly-mode .readonly-hide{display:none!important}
+body.readonly-mode .card:hover{transform:none;cursor:default}
+body.readonly-mode .card-acts{display:none!important}
+body.readonly-mode .list-row:hover{cursor:default}
+.readonly-banner{display:none;background:linear-gradient(135deg,#1e3a6e,#1a2340);color:#fff;padding:11px 32px;font-size:13px;font-weight:600;border-bottom:2px solid #3b82f6;align-items:center;gap:10px;flex-shrink:0}
+body.readonly-mode .readonly-banner{display:flex}
+.ro-badge{background:#3b82f6;color:#fff;font-size:10px;padding:2px 10px;border-radius:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
+
+/* ════════════════════════════════════════════
+   PAGE D'ACCUEIL — SIPHRO CRM
+═══════════════════════════════════════════════ */
+#landing{
+  position:fixed;inset:0;z-index:9000;
+  background:linear-gradient(135deg,#0a0f1e 0%,#0d1a3a 40%,#0f2252 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  overflow:hidden;
+}
+#landing.hidden{display:none}
+
+/* Particules décoratives */
+.lp-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.lp-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18}
+.lp-orb-1{width:500px;height:500px;background:radial-gradient(circle,#3b82f6,transparent);top:-100px;right:-100px;animation:orbFloat1 12s ease-in-out infinite}
+.lp-orb-2{width:400px;height:400px;background:radial-gradient(circle,#8b5cf6,transparent);bottom:-80px;left:-80px;animation:orbFloat2 15s ease-in-out infinite}
+.lp-orb-3{width:300px;height:300px;background:radial-gradient(circle,#0891b2,transparent);top:50%;left:50%;transform:translate(-50%,-50%);animation:orbFloat3 10s ease-in-out infinite}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-30px,30px) scale(1.08)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(25px,-25px) scale(1.05)}}
+@keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.15)}}
+
+/* Grid de points déco */
+.lp-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+
+/* Contenu landing */
+.lp-content{position:relative;z-index:1;text-align:center;max-width:820px;padding:40px 24px;animation:lpIn .8s cubic-bezier(.16,1,.3,1) both}
+@keyframes lpIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.lp-logo{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px}
+.lp-logo-icon{width:56px;height:56px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 8px 32px rgba(59,130,246,.45);animation:iconPulse 3s ease-in-out infinite}
+@keyframes iconPulse{0%,100%{box-shadow:0 8px 32px rgba(59,130,246,.45)}50%{box-shadow:0 12px 48px rgba(59,130,246,.7)}}
+.lp-logo-text{font-family:'Fraunces',serif;font-size:38px;font-weight:700;color:#fff;letter-spacing:-.5px}
+.lp-tagline{font-size:14px;color:rgba(255,255,255,.4);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;font-weight:600}
+.lp-divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,#3b82f6,transparent);margin:0 auto 40px;border-radius:2px}
+
+.lp-title{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.3}
+.lp-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:48px;line-height:1.7;max-width:560px;margin-left:auto;margin-right:auto}
+
+/* Cartes de sélection */
+.lp-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:700px;margin:0 auto}
+.lp-card{
+  background:rgba(255,255,255,.04);
+  border:1.5px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:32px 28px;
+  cursor:pointer;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  text-align:left;
+  position:relative;
+  overflow:hidden;
+  text-decoration:none;
+  display:block;
+}
+.lp-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.04),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.lp-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(255,255,255,.25);
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+}
+.lp-card:hover::before{opacity:1}
+.lp-card.admin{border-color:rgba(59,130,246,.35)}
+.lp-card.admin:hover{border-color:rgba(59,130,246,.7);box-shadow:0 24px 60px rgba(59,130,246,.25)}
+.lp-card.collab{border-color:rgba(139,92,246,.3)}
+.lp-card.collab:hover{border-color:rgba(139,92,246,.65);box-shadow:0 24px 60px rgba(139,92,246,.2)}
+
+.lp-card-ico{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:20px;
+}
+.lp-card.admin .lp-card-ico{background:linear-gradient(135deg,rgba(59,130,246,.25),rgba(37,99,235,.15));border:1px solid rgba(59,130,246,.4)}
+.lp-card.collab .lp-card-ico{background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(109,40,217,.15));border:1px solid rgba(139,92,246,.4)}
+
+.lp-card-title{font-size:18px;font-weight:800;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.lp-card-badge{font-size:9px;padding:3px 9px;border-radius:8px;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
+.lp-card.admin .lp-card-badge{background:rgba(59,130,246,.25);color:#93c5fd;border:1px solid rgba(59,130,246,.4)}
+.lp-card.collab .lp-card-badge{background:rgba(139,92,246,.2);color:#c4b5fd;border:1px solid rgba(139,92,246,.35)}
+
+.lp-card-desc{font-size:12.5px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:22px}
+.lp-card-features{list-style:none}
+.lp-card-features li{font-size:12px;color:rgba(255,255,255,.4);padding:4px 0;display:flex;align-items:center;gap:7px}
+.lp-card-features li::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.lp-card.admin .lp-card-features li::before{background:#3b82f6}
+.lp-card.collab .lp-card-features li::before{background:#8b5cf6}
+
+.lp-card-arrow{
+  position:absolute;bottom:24px;right:24px;
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:all .3s;
+  opacity:0;transform:translateX(-6px);
+}
+.lp-card.admin .lp-card-arrow{background:rgba(59,130,246,.3)}
+.lp-card.collab .lp-card-arrow{background:rgba(139,92,246,.3)}
+.lp-card:hover .lp-card-arrow{opacity:1;transform:translateX(0)}
+
+.lp-footer{
+  margin-top:40px;
+  font-size:11px;color:rgba(255,255,255,.2);
+  letter-spacing:.8px;text-transform:uppercase;
+  display:flex;align-items:center;gap:12px;
+}
+.lp-footer span{width:1px;height:10px;background:rgba(255,255,255,.15);display:inline-block}
+
+/* Stats mini dans le landing */
+.lp-stats{display:flex;gap:28px;justify-content:center;margin-bottom:44px}
+.lp-stat{text-align:center}
+.lp-stat-val{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:#fff;line-height:1}
+.lp-stat-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:600}
+.lp-stat-sep{width:1px;background:rgba(255,255,255,.1);align-self:stretch;margin:4px 0}
+
+@media(max-width:600px){
+  .lp-cards{grid-template-columns:1fr}
+  .lp-logo-text{font-size:28px}
+  .lp-title{font-size:22px}
+  .lp-stats{gap:18px}
+  .lp-stat-val{font-size:22px}
+}
 </style>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════════════
+     PAGE D'ACCUEIL SIPHRO CRM
+     Masquée automatiquement si ?mode=admin ou ?readonly=1
+═══════════════════════════════════════════════ -->
+<div id="landing">
+  <div class="lp-bg">
+    <div class="lp-orb lp-orb-1"></div>
+    <div class="lp-orb lp-orb-2"></div>
+    <div class="lp-orb lp-orb-3"></div>
+    <div class="lp-grid"></div>
+  </div>
+
+  <div class="lp-content">
+    <div class="lp-logo">
+      <div class="lp-logo-icon">◈</div>
+      <div class="lp-logo-text">SIPHRO</div>
+    </div>
+    <div class="lp-tagline">CRM Commercial • CHR Méditerranée</div>
+    <div class="lp-divider"></div>
+
+    <div class="lp-stats">
+      <div class="lp-stat">
+        <div class="lp-stat-val">52</div>
+        <div class="lp-stat-lbl">Prospects</div>
+      </div>
+      <div class="lp-stat-sep"></div>
+      <div class="lp-stat">
+        <div class="lp-stat-val" id="lp-chaud-count">—</div>
+        <div class="lp-stat-lbl">Dossiers chauds</div>
+      </div>
+      <div class="lp-stat-sep"></div>
+      <div class="lp-stat">
+        <div class="lp-stat-val" id="lp-actions-count">—</div>
+        <div class="lp-stat-lbl">Actions en cours</div>
+      </div>
+    </div>
+
+    <div class="lp-title">Choisissez votre mode d'accès</div>
+    <div class="lp-sub">Sélectionnez votre profil pour accéder au suivi commercial. L'accès administrateur permet les modifications, l'accès équipe est en lecture seule.</div>
+
+    <div class="lp-cards">
+      <!-- ADMIN -->
+      <a href="#" class="lp-card admin" id="lp-admin-btn">
+        <div class="lp-card-ico">⚡</div>
+        <div class="lp-card-title">
+          Administrateur
+          <span class="lp-card-badge">Complet</span>
+        </div>
+        <div class="lp-card-desc">Accès total au CRM. Créez, modifiez et gérez l'intégralité des dossiers prospects.</div>
+        <ul class="lp-card-features">
+          <li>Ajouter / modifier des prospects</li>
+          <li>Planifier et compléter les actions</li>
+          <li>Importer & exporter les données</li>
+          <li>Accès agenda et suivi complet</li>
+        </ul>
+        <div class="lp-card-arrow">→</div>
+      </a>
+
+      <!-- COLLABORATEUR -->
+      <a href="#" class="lp-card collab" id="lp-collab-btn">
+        <div class="lp-card-ico">👁️</div>
+        <div class="lp-card-title">
+          Équipe / Collaborateur
+          <span class="lp-card-badge">Lecture</span>
+        </div>
+        <div class="lp-card-desc">Consultez les dossiers et le planning commercial sans pouvoir modifier les données.</div>
+        <ul class="lp-card-features">
+          <li>Consultation de tous les prospects</li>
+          <li>Accès agenda et planning</li>
+          <li>Export CSV autorisé</li>
+          <li>Aucune modification possible</li>
+        </ul>
+        <div class="lp-card-arrow">→</div>
+      </a>
+    </div>
+
+    <div class="lp-footer">
+      <span>SIPHRO</span>
+      <span></span>
+      <span>CRM v3.0</span>
+      <span></span>
+      <span>CHR Méditerranée</span>
+      <span></span>
+      <span id="lp-date"></span>
+    </div>
+  </div>
+</div>
+
 <div class="app">
 
 <!-- ══ SIDEBAR ══ -->
@@ -392,16 +621,25 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
     <div class="sb-sec">
       <div class="sb-sec-lbl">Données</div>
-      <div class="ni" onclick="openImportModal()"><span class="ni-ico">📥</span><span class="ni-lbl">Importer CSV/Excel</span></div>
+      <div class="ni readonly-hide" onclick="openImportModal()"><span class="ni-ico">📥</span><span class="ni-lbl">Importer CSV/Excel</span></div>
       <div class="ni" onclick="exportData()"><span class="ni-ico">📤</span><span class="ni-lbl">Exporter CSV</span></div>
-      <div class="ni" onclick="openDeletedModal()"><span class="ni-ico">🗑️</span><span class="ni-lbl">Prospects supprimés</span><span class="nbadge b-gray" id="deleted-count">0</span></div>
+      <div class="ni readonly-hide" onclick="openDeletedModal()"><span class="ni-ico">🗑️</span><span class="ni-lbl">Prospects supprimés</span><span class="nbadge b-gray" id="deleted-count">0</span></div>
+      <div class="ni readonly-hide" onclick="showBackupInfo()" title="Vérifier la sauvegarde locale"><span class="ni-ico">🔒</span><span class="ni-lbl">Sauvegarde locale</span></div>
     </div>
   </nav>
-  <div class="sb-footer"><div class="sb-version">SIPHRO v2.0 — CHR Méditerranée</div></div>
+  <div class="sb-footer"><div class="sb-version">SIPHRO CRM v2.1 — CHR Méditerranée<br><span style="color:rgba(255,255,255,.15);font-size:9px">🔒 Données protégées localement</span></div></div>
 </aside>
 
 <!-- ══ MAIN ══ -->
 <main class="main">
+
+<!-- Bandeau mode lecture seule (affiché uniquement en mode ?readonly=1) -->
+<div class="readonly-banner">
+  <span style="font-size:18px">👁️</span>
+  <span>Mode <span class="ro-badge">Consultation</span></span>
+  <span style="color:rgba(255,255,255,.6);font-size:12px">— Vous consultez le CRM SIPHRO en lecture seule. Aucune modification n'est possible.</span>
+  <span style="margin-left:auto;color:rgba(255,255,255,.4);font-size:11px">SIPHRO CRM • CHR Méditerranée</span>
+</div>
 
 <!-- ── DASHBOARD VIEW ── -->
 <div class="view active" id="view-dashboard">
@@ -417,8 +655,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         </div>
         <div class="hdr-actions">
           <span class="sync-pill" id="sync-badge">🔄 Chargement...</span>
-          <button class="btn btn-secondary btn-sm" onclick="openImportModal()">📥 Importer</button>
-          <button class="btn btn-primary btn-sm" onclick="openProspectModal()">+ Nouveau prospect</button>
+          <button class="btn btn-secondary btn-sm readonly-hide" onclick="openImportModal()">📥 Importer</button>
+          <button class="btn btn-primary btn-sm readonly-hide" onclick="openProspectModal()">+ Nouveau prospect</button>
         </div>
       </div>
     </header>
@@ -687,6 +925,73 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 // ══════════════════════════════════════════════
 
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyn_49XC_MOUfCt714IP_oSxhGNGUn9n1M6xm5AsdHiWKN-XRdeS8cCQAcSuG8v0dXMnA/exec';
+
+// ══════════════════════════════════════════════
+// 🔒 BASE COMPLÈTE — 52 PROSPECTS SIPHRO
+// Source: Google Sheets (21) + Salon Manquants (30) + Extra (1)
+// Protection: ces prospects ne peuvent PAS être écrasés ni supprimés automatiquement
+// Fusion intelligente par nom (dédoublonnage automatique)
+// ══════════════════════════════════════════════
+const ALL_PROSPECTS_SEED=[
+  // ─── GOOGLE SHEETS — 21 PROSPECTS ───────────────────────────────────────────
+  {nom:'Thermes de Balaruc',contactNom:'Pôle formation',contactTel:'-',contactEmail:'poleformation.poleformation@thermesbalaruc.com',adresse:'Balaruc',siret:'',categorie:'autre',formation:'Ouverture Resto',commentaire:'PRIORITÉ. Création restaurant. Se positionner.',prochaineAction:{description:'RELANCE MAIL 2 (chercher numéro tel)',date:'2026-03-03',hstart:'09:00',hend:'09:30',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Premier contact au salon'},{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Mail de relance envoyé après salon'}]},
+  {nom:'Cadence au Musée',contactNom:'À TROUVER',contactTel:'',contactEmail:'',adresse:'Narbonne',siret:'',categorie:'autre',formation:'',commentaire:'⚠️ AUCUNE INFO — Contact à trouver',prochaineAction:{description:'RECHERCHER CONTACT + RELANCE',date:'2026-02-19',hstart:'10:00',hend:'10:30',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Contact rapide au salon'},{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Mail envoyé mais pas de réponse — aucun contact trouvé'}]},
+  {nom:'Ambrussum',contactNom:'Monsieur',contactTel:'04 67 86 76 73',contactEmail:'restaurantambrussum@gmail.com',adresse:'Villetelle',siret:'',categorie:'autre',formation:'',commentaire:"17/02 : J'échange avec l'associé de la personne vue au salon qui m'informe qu'ils ont prévu formation en salle (sommellerie) et en cuisine (cuisson sous vide/basse temp). N'a pas d'autres besoins actuellement, accepte le suivi et de recevoir un mail.",prochaineAction:{description:'SUIVIT COURANT ANNÉE 2026 (BUDGET UTILISÉ)',date:'2026-05-04',hstart:'09:00',hend:'09:30',createdAt:'2026-02-17T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Contact salon — formations en cours'},{description:'RELANCE MAIL APRÉS SALON + Échange avec associé',date:'2026-02-17',createdAt:'2026-02-17T10:00:00.000Z',commentaire:"Budget OPCO déjà utilisé pour l'année — formations programmées. Suivi en mai 2026."}]},
+  {nom:'Randstad Mtp',contactNom:'Sylvia Chastang',contactTel:'04 67 99 81 35 / 06 16 17 95 26',contactEmail:'sylvia.chastang@randstadsearch.fr',adresse:'Montpellier',siret:'',categorie:'autre',formation:'',commentaire:'Gère RH agence. Fait intervenir formations CPF/autres. Potentiellement intéressée. ⚠️ MAIL PAS ENVOYÉ',prochaineAction:null,actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Discussion RH et formations'},{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'⚠️ Attention: mail PAS envoyé — à envoyer'}]},
+  {nom:'Camping Corse',contactNom:'LUCCHINI TOUSSAINT',contactTel:'',contactEmail:'lucchinitoussaint@gmail.com',adresse:'Corse',siret:'',categorie:'chaud',formation:'',commentaire:'Intéressé formation finance.',prochaineAction:{description:'RELANCE MAIL 2 (chercher numéro tel)',date:'2026-02-20',hstart:'09:00',hend:'09:30',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Intéressé formation finance'},{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Mail envoyé — pas de réponse — chercher numéro tel'}]},
+  {nom:'Restaurant République Coricala',contactNom:'Optistanal',contactTel:'',contactEmail:'',adresse:'Vias',siret:'',categorie:'autre',formation:'Restauration',commentaire:'Madame pressée mais intéressée. Recontact prévu.',prochaineAction:{description:'RAPPEL SUITE NRP',date:'2026-02-18',hstart:'10:00',hend:'10:30',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Madame pressée mais intéressée'},{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'NRP — à rappeler'}]},
+  {nom:'BBQ',contactNom:'',contactTel:'06 59 34 21 18',contactEmail:'traiteurbbq@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:'Pas de locaux ?',prochaineAction:{description:'RELANCE SALON',date:'2026-02-16',hstart:'14:00',hend:'14:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[]},
+  {nom:'RESTAURANT NIMES (PROJET)',contactNom:'',contactTel:'',contactEmail:'david.terlecki@orange.fr',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:'Explication OPCO — Projet ouverture restaurant traditionnel',prochaineAction:{description:'Relance mail Salon',date:'2026-02-16',hstart:'14:30',hend:'15:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[]},
+  {nom:'TRAITEUR',contactNom:'',contactTel:'',contactEmail:'viccos66450@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:'3 personnes familiale — Ouvert depuis 3 ans — Plusieurs points à former',prochaineAction:{description:'RELANCE SUITE SALON',date:'2026-02-16',hstart:'15:00',hend:'15:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[]},
+  {nom:'Miozotis - Future Pizzeria',contactNom:'Messieurs Dames',contactTel:'',contactEmail:'',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:"Projet achat pizzeria. De base événementiel. Projet en cours. À suivre.",prochaineAction:{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-16',hstart:'15:30',hend:'16:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Projet pizzeria en cours — à suivre'}]},
+  {nom:'OCCITANIA REPUBLIC',contactNom:'Chloé Calas',contactTel:'06 34 30 43 73',contactEmail:'oliana-34@hotmail.com',adresse:'Vias',siret:'',categorie:'chaud',formation:'',commentaire:"Pressée mais intéressée — Restaurant sur Vias\nFixe : 09.52.22.21.60\n17/02 : NRP",prochaineAction:{description:'RAPPEL SUITE NRP',date:'2026-02-18',hstart:'09:30',hend:'10:00',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'RELANCE SUITE SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Première relance — NRP le 17/02'}]},
+  {nom:'La Table de Fah',contactNom:'Madame',contactTel:'07 49 47 80 88',contactEmail:'contact@latabledefah.fr',adresse:'Mèze',siret:'',categorie:'chaud',formation:'Hygiène (HACCP)',commentaire:'Ne connaissait pas les budgets. Besoin d\'accompagnement.',prochaineAction:{description:'Rappel — voir si reprise effectuée pour relancer sur la formation',date:'2026-03-09',hstart:'09:00',hend:'09:30',createdAt:'2026-02-17T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Premier contact — besoin HACCP'},{description:'Relance mail après salon',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Mail envoyé avec catalogue'},{description:'ÉCHANGE TEL — REPRISE EN COURS — INTÉRESSÉ — ON SE RECONTACTE',date:'2026-02-17',createdAt:'2026-02-17T10:00:00.000Z',commentaire:'Reprise en cours — rappel prévu fin mars pour lancer la formation HACCP'}]},
+  {nom:'Bella Pizza',contactNom:'Monsieur',contactTel:'-',contactEmail:'jfjt@hotmail.fr',adresse:'Sommières',siret:'',categorie:'chaud',formation:'-',commentaire:'Pizzeria + restaurant. Intérêt pour la solution.',prochaineAction:{description:'RELANCE MAIL 2 (chercher numéro tel)',date:'2026-02-21',hstart:'09:00',hend:'09:30',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Contact salon'},{description:'RELANCE SUITE ÉCHANGE SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Mail envoyé — pas de réponse — pas de tel'}]},
+  {nom:'Le Matchico',contactNom:'Johanna Khoury',contactTel:'06 85 79 02 99',contactEmail:'lematchico@gmail.com',adresse:'Saint-Affrique',siret:'',categorie:'chaud',formation:'Hygiène (HACCP)',commentaire:"Entreprise familiale, quatre personnes. Ont eu un contrôle d'hygiène récemment. OK pour repasser la formation.",prochaineAction:{description:'Recontacter suite au premier échange',date:'2026-03-03',hstart:'09:30',hend:'10:00',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Besoin HACCP — contrôle récent'},{description:'Mail envoyé après salon',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Catalogue envoyé'},{description:'Relance téléphonique',date:'2026-02-17',createdAt:'2026-02-17T10:00:00.000Z',commentaire:'Mr débordé — pas eu le temps de regarder — recontacter début mars'},{description:'ÉCHAN TEL — MR DÉBORDÉ — PAS EU LE TEMPS DE S\'Y PENCHER — À RECONTACTER',date:'2026-02-19',createdAt:'2026-02-19T10:00:00.000Z',commentaire:'Rappel programmé au 03/03'}]},
+  {nom:'Judy',contactNom:'Madame',contactTel:'04 34 00 57 54',contactEmail:'contact@judy-mauguio.fr',adresse:'Mauguio',siret:'',categorie:'chaud',formation:'Hygiène équipe',commentaire:'Restaurant asiatique — pas d\'hygiène sauf madame — intéressé pour hygiène équipe.',prochaineAction:{description:'RAPPEL — CAR PATRONNE ABSENTE LORS DE LA RELANCE',date:'2026-02-19',hstart:'10:30',hend:'11:00',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Restaurant asiatique — hygiène équipe'},{description:'RELANCE APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Patronne absente — à rappeler'}]},
+  {nom:'Korean Korner',contactNom:'M. Liberbaum',contactTel:'06 25 02 42 24',contactEmail:'l.liberbaum@korean-korner.com',adresse:'Montpellier',siret:'',categorie:'chaud',formation:'Management / Hygiène',commentaire:"Pleine expansion sur Marseille, ouvre son troisième établissement. Besoin de formation managers.\n17/02 : N'a pas encore vu le catalogue, Mr dit vouloir me rappeler, je relance dans 2 semaines",prochaineAction:{description:'RELANCE TEL — SUITE ÉCHANGE — PAS VU CATALOGUE ENCORE',date:'2026-03-03',hstart:'10:00',hend:'10:30',createdAt:'2026-02-17T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Expansion — 3ème établissement — management'},{description:'Mail avec catalogue',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Catalogue envoyé'},{description:'RELANCE SUITE MAIL SALON — Échange tel',date:'2026-02-17',createdAt:'2026-02-17T10:00:00.000Z',commentaire:"N'a pas encore vu le catalogue — rappel dans 2 semaines"}]},
+  {nom:'La Guinguette du Ponant',contactNom:'Henri Dupré',contactTel:'06 60 10 92 52',contactEmail:'henridupre@live.fr',adresse:'La Grande Motte',siret:'',categorie:'chaud',formation:'HYGIÈNE ET À VOIR',commentaire:'Venu au salon pour chercher partenaire formation. La Grande Motte triple d\'effectif en saison. À recontacter.',prochaineAction:{description:'Relance suite à Message vocal',date:'2026-02-20',hstart:'11:00',hend:'11:30',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon — venu chercher partenaire',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Motivé — triple effectif en saison'},{description:'RELANCE APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Message vocal laissé — à rappeler'}]},
+  {nom:'Camping Les Sablons',contactNom:'Chef de cuisine',contactTel:'-',contactEmail:'chef@lessablons.com',adresse:'-',siret:'',categorie:'chaud',formation:'CDI / Équipe',commentaire:'80 personnes sur la saison. Vient de signer un CDI. Intéressé par la formation.',prochaineAction:{description:'RELANCE MAIL 2 (chercher numéro tel)',date:'2026-02-20',hstart:'11:30',hend:'12:00',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'80 personnes saison — CDI signé'},{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Mail envoyé'},{description:'Appel camping — RESTAURANT FERMÉ — FAIRE MAIL',date:'2026-02-17',createdAt:'2026-02-17T10:00:00.000Z',commentaire:'Restaurant camping fermé hors saison — contact par mail uniquement'}]},
+  {nom:'Tropicana',contactNom:'Valérie Delaire',contactTel:'06 20 80 43 00',contactEmail:'tropicana.pv@wanadoo.fr',adresse:'Porto-Vecchio',siret:'',categorie:'chaud',formation:'Formation sur place',commentaire:'Intéressée formation sur place. 7 personnes en cuisine.',prochaineAction:{description:'RAPPEL SUITE MESSAGE VOCAL',date:'2026-02-19',hstart:'14:00',hend:'14:30',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Formation sur place — 7 pers cuisine'},{description:'RELANCE APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'Message vocal laissé'}]},
+  {nom:'Le Soleou',contactNom:'Yohan Jullien',contactTel:'06 23 15 19 16',contactEmail:'maximefabre@hotmail.fr',adresse:'Grau-du-Roi',siret:'',categorie:'chaud',formation:'-',commentaire:'Venu chercher des infos. À relancer.',prochaineAction:{description:'RELANCE 2 SUITE NRP',date:'2026-02-20',hstart:'14:30',hend:'15:00',createdAt:'2026-02-19T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'À relancer'},{description:'RELANCE APRÉS SALON',date:'2026-02-14',createdAt:'2026-02-14T10:00:00.000Z',commentaire:'NRP — 2ème relance à faire'}]},
+  {nom:'Les Copains à Table',contactNom:'Christian Carensac',contactTel:'04 26 17 61 42',contactEmail:'fournisseurs@lescopainsatable.com',adresse:'Canet (66140)',siret:'',categorie:'chaud',formation:'-',commentaire:'Mise en relation par Pierre. Intéressé.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-16',hstart:'15:00',hend:'15:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mise en relation par Pierre — mail envoyé'}]},
+  // ─── POKE AVENUE (Agenda) ────────────────────────────────────────────────────
+  {nom:'Poke Avenue',contactNom:'Monsieur',contactTel:'-',contactEmail:'',adresse:'',siret:'',categorie:'organisation',formation:'',commentaire:'RDV planifié lundi 16/02 à 13h30',prochaineAction:{description:'RDV LUNDI 13H30',date:'2026-02-16',hstart:'13:30',hend:'14:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[]},
+  // ─── PROSPECTS MANQUANTS SALON — 30 PROSPECTS ───────────────────────────────
+  {nom:'French Kiss Mtp',contactNom:'Hédi Khodja',contactTel:'06 29 79 50 87',contactEmail:'dir.montpellier@eklohotels.com',adresse:'Montpellier',siret:'',categorie:'chaud',formation:'Intra (2 pers)',commentaire:'Lien avec 12 hôtels Eklo. Très intéressé. Ne trouve pas de formation intra pour deux personnes.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-17',hstart:'09:00',hend:'09:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé (2026-02-12)'}]},
+  {nom:'Hôtel Le Bon Port / La Balette',contactNom:'Isabelle Amoros & Karine Giraux',contactTel:'06 03 47 68 81',contactEmail:'croquesoleil@gmail.com',adresse:'Collioure (66190)',siret:'',categorie:'chaud',formation:'Catalogue',commentaire:'Double contact. Ne connaissaient pas les budgets. Intéressées.',prochaineAction:{description:'RELANCE TEL APRÉS SALON + MAIL',date:'2026-02-18',hstart:'10:00',hend:'10:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon + MAIL AVEC CATALOGUE',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon + MAIL AVEC CATALOGUE (2026-02-12)'}]},
+  {nom:'Camping Les Coudoulets',contactNom:'Clément Pouzache',contactTel:'04 75 93 94 95',contactEmail:'camping@coudoulets.com',adresse:'Pradons (07120)',siret:'',categorie:'autre',formation:'Cuisine / Rentabilité',commentaire:"Très intéressé. Formation cuisine. Parle d'un autre budget OPCO dédié au camping.",prochaineAction:{description:'RELANCE SUITE SALON (BUDGET CAMPING ?)',date:'2026-02-16',hstart:'14:00',hend:'14:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé (2026-02-12)'}]},
+  {nom:'Bar Tapas',contactNom:'Jérémie',contactTel:'-',contactEmail:'jeremycrt14@gmail.com',adresse:'Port Camargue',siret:'',categorie:'autre',formation:'',commentaire:'ECHANGE RAPIDE - Ne connaît pas OPCO - ÉQUIPE EN PLACE',prochaineAction:{description:'RELANCE SUITE SALON',date:'2026-02-16',hstart:'14:30',hend:'15:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'SAS MPDP',contactNom:'JEREMY SACCOCCIO',contactTel:'06 46 42 00 21',contactEmail:'sasmpdp@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:'',prochaineAction:{description:'RELANCE SUITE SALON',date:'2026-02-16',hstart:'15:00',hend:'15:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[]},
+  {nom:'SARL Chez Ttiou',contactNom:'Stéphane Baeza',contactTel:'06 24 37 03 03',contactEmail:'stephqn.baeza@cegetel.net',adresse:'34140',siret:'',categorie:'autre',formation:'',commentaire:'',prochaineAction:{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-18',hstart:'10:30',hend:'11:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Tour Lumas',contactNom:'Employé',contactTel:'',contactEmail:'',adresse:'Arles',siret:'',categorie:'autre',formation:'',commentaire:'Centrale avec chef livre 4 restaurants ville. Peu chance transmission. Pas mail/contact.',prochaineAction:{description:'RECHERCHE + RELANCE',date:'2026-02-18',hstart:'11:00',hend:'11:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Domaine Le Caylou',contactNom:'Madame Legrand Estelle',contactTel:'06 13 07 58 96',contactEmail:'evenements.caylou@gmail.com',adresse:'30122',siret:'',categorie:'autre',formation:'',commentaire:'',prochaineAction:{description:'RELANCE MAIL APRÉS SALON',date:'2026-02-18',hstart:'09:30',hend:'10:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Café des Arts',contactNom:'Florian Mentheour',contactTel:'-',contactEmail:'florian.mentheour@orange.fr',adresse:'',siret:'',categorie:'autre',formation:'Catalogue',commentaire:'Salarié mais grosse équipe en haute saison, je fais le suivi quand même.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'14:00',hend:'14:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'La Galère',contactNom:'Monsieur',contactTel:'04 67 32 15 25',contactEmail:'lagalere34@gmail.com',adresse:'Valras-Plage',siret:'',categorie:'autre',formation:'GLACIER (À VOIR SI CATALOGUE)',commentaire:'Prise de contact positive. Pas de mail envoyé car pas de catalogue glacier.',prochaineAction:{description:'MAIL CATALOGUE GLACIER SUITE ÉCHANGE SALON',date:'2026-02-18',hstart:'15:00',hend:'15:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Camping Les Amandiers',contactNom:'Madame',contactTel:'',contactEmail:'camping-lesamandiers@orange.fr',adresse:'',siret:'',categorie:'autre',formation:'Snacking / Gestion',commentaire:'Connaît OPCO mais trop compliqué. Intéressée solution. Accepte catalogue + recontact.',prochaineAction:{description:'RELANCE SUITE MAIL SALON',date:'2026-02-18',hstart:'16:00',hend:'16:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Traiteur Sannath',contactNom:'Mesdames Cortell',contactTel:'-',contactEmail:'traiteur.sannath@gmail.com',adresse:'Serignan',siret:'',categorie:'autre',formation:'',commentaire:'Clos des Oliviers. Ne connaissaient pas les budgets.',prochaineAction:{description:'RELANCE SUITE MAIL SALON',date:'2026-02-18',hstart:'16:30',hend:'17:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'La Régence',contactNom:'Madame',contactTel:'-',contactEmail:'elodiealais1981@gmail.com',adresse:'Alès',siret:'',categorie:'autre',formation:'Recrutement / HACCP',commentaire:'Possible embauche avant saison.',prochaineAction:{description:'RELANCE SUITE ÉCHANGE SALON',date:'2026-02-18',hstart:'09:00',hend:'09:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé (2026-02-12)'}]},
+  {nom:'La Sergerie',contactNom:'',contactTel:'-',contactEmail:'Lasergeriefrontdemer@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'Catalogue',commentaire:'Pensait devoir financer. Intéressée après explication.',prochaineAction:{description:'RELANCE SUITE ÉCHANGE SALON',date:'2026-02-18',hstart:'09:30',hend:'10:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé (2026-02-12)'}]},
+  {nom:'La Plage',contactNom:'Alain Bourrer',contactTel:'-',contactEmail:'alainbourrer@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:'En vente. Accepte le suivi mais je ne pense pas que cela intéressera Mr car en vente.',prochaineAction:{description:'RELANCE SUITE SALON',date:'2026-02-18',hstart:'10:00',hend:'10:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé (2026-02-12)'}]},
+  {nom:'Le Maya',contactNom:'Jyanne Boulila',contactTel:'-',contactEmail:'gihane_boulila@hotmail.fr',adresse:'Ste-Marie-de-la-Mer',siret:'',categorie:'autre',formation:'Brunch / Hygiène',commentaire:"Équipe de 4. Ne connaît pas les budgets.",prochaineAction:{description:'RELANCE SUITE ÉCHANGE SALON',date:'2026-02-18',hstart:'11:00',hend:'11:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé (2026-02-12)'}]},
+  {nom:'Restaurant Le 9',contactNom:'Monsieur',contactTel:'-',contactEmail:'Julienb1204@gmail.com',adresse:'Béziers',siret:'',categorie:'autre',formation:'',commentaire:"Intéressé par la formation, connaît Acto. Pas le temps d'échanger mais fait preuve d'intérêt. Prend la carte et la plaquette.",prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'14:00',hend:'14:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Brasserie Le Carola',contactNom:'Christian Guiot',contactTel:'06 12 26 25 14',contactEmail:'christian.guiot30@sfr.fr',adresse:'Uzès',siret:'',categorie:'autre',formation:'',commentaire:'Ne connaissait pas les budgets. Intéressé.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'14:30',hend:'15:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Brasserie La Détente',contactNom:'Employé',contactTel:'-',contactEmail:'Cameloubimbo@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'Anglais',commentaire:'Employé intéressé. Doit en parler aux gérants.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'15:00',hend:'15:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Aux Terrasses',contactNom:'Damien Latour',contactTel:'06 47 98 42 44',contactEmail:'damienmaster80@hotmail.fr',adresse:'Nîmes',siret:'',categorie:'autre',formation:'Cuisine (4 pers)',commentaire:'Ne connaissaient pas les budgets. Intéressés.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'15:30',hend:'16:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé (2026-02-12)'}]},
+  {nom:'Ponant sur Berges',contactNom:'Vincent Vignon',contactTel:'-',contactEmail:'PONANTSURBERGES@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:'Échange rapide. Directeur intéressé.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'16:00',hend:'16:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'La Fontaine aux Artistes',contactNom:'Le Roy Vincent',contactTel:'-',contactEmail:'leroyvincent34@gmail.com',adresse:'Gignac',siret:'',categorie:'autre',formation:'Pâtisserie',commentaire:'Connaît le système des budgets OPCO. A déjà réalisé une formation pâtisserie. Peut être intéressé par notre solution. Accepte le catalogue.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'16:30',hend:'17:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Catalogue envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Catalogue envoyé (2026-02-12)'}]},
+  {nom:'Le Sahuc',contactNom:'Farangouise',contactTel:'-',contactEmail:'Farenqluis@gmail.com',adresse:'Rivière-sur-Tarn',siret:'',categorie:'autre',formation:'Catalogue',commentaire:'Quatre personnes + lui = cinq. Ne connaissait pas les budgets OPCO. Intéressé mais ne pense pas forcément avoir besoin de se former. Regarde le catalogue pour réfléchir.',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'17:00',hend:'17:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'SAS Les Filles',contactNom:'Mesdames',contactTel:'06 32 05 70 38',contactEmail:'infoschezlesfilles@gmail.com',adresse:'Lozère',siret:'',categorie:'autre',formation:'',commentaire:"2 personnes uniquement - voir si HCR ou rapide - une des deux a déjà fait l'hygiène récemment.",prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'11:30',hend:'12:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé (2026-02-12)'}]},
+  {nom:'Projet Resto Nîmes',contactNom:'Le May Émilien',contactTel:'-',contactEmail:'Lemayemilien@gmail.com',adresse:'Nîmes',siret:'',categorie:'autre',formation:'Catalogue',commentaire:'Projet en cours, pas encore ouvert. Intéressé par suivi.',prochaineAction:{description:'RELANCE SUITE SALON',date:'2026-02-18',hstart:'10:30',hend:'11:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Restaurant À la Moule',contactNom:'Abdesadek Kacimi',contactTel:'07 67 60 06 28',contactEmail:'kacimixx@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'Accompagnement',commentaire:"Ne connais pas le fonctionnement des budgets OPCO. J'explique notre solution et les budgets. Peuvent être intéressés.",prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-18',hstart:'09:00',hend:'09:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Les Filles du 15',contactNom:'Céline Alboussière',contactTel:'06 62 82 71 58',contactEmail:'artesia14@yahoo.fr',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:"Projet d'ouverture de restauration, deux personnes dans un premier temps. Pas de salariés. Ne connaissaient pas les budgets. Peuvent être intéressées.",prochaineAction:{description:'RELANCE SUIVIT SALON',date:'2026-02-18',hstart:'10:00',hend:'10:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Plaquette donnée',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Plaquette donnée (2026-02-12)'}]},
+  {nom:'SAS Côté Jardin Gordes',contactNom:'Juliette Lambert',contactTel:'07 69 97 60 60',contactEmail:'juliette.lambert19899@hotmail.com',adresse:'Gordes / Vaucluse',siret:'',categorie:'autre',formation:'Accompagnement',commentaire:"Madame n'est pas la décisionnaire. Je lui parle des budgets qu'elle ne connaissait pas. Intéressée par l'accompagnement et la démarche.",prochaineAction:{description:'RELANCE SUITE SALON',date:'2026-02-18',hstart:'10:30',hend:'11:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Échange Salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Échange Salon (2026-02-12)'}]},
+  {nom:'Boulangerie Jessica',contactNom:'Jessica Poisseau',contactTel:'-',contactEmail:'Jessica.poso34@gmail.com',adresse:'',siret:'',categorie:'autre',formation:'',commentaire:'',prochaineAction:{description:'RELANCE APRÉS SALON',date:'2026-02-23',hstart:'09:00',hend:'09:30',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:'Mail envoyé après salon',date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:'Mail envoyé après salon (2026-02-12)'}]},
+  {nom:'Au Pain du Rhony',contactNom:'Monsieur',contactTel:'04 66 35 01 23',contactEmail:'Aupaindurhony@gmail.com',adresse:'Aimargues (Gard)',siret:'',categorie:'autre',formation:'?',commentaire:"Équipe 20 pers. Connaît déjà les budgets OPCO.",prochaineAction:{description:'RELANCE APRÉS SALON + MAIL',date:'2026-02-23',hstart:'09:30',hend:'10:00',createdAt:'2026-02-12T10:00:00.000Z'},actionsEffectuees:[{description:"Échange Salon + mail d'après salon",date:'2026-02-12',createdAt:'2026-02-12T10:00:00.000Z',commentaire:"Échange Salon + mail d'après salon (2026-02-12)"}]}
+];
+
+// Alias pour compatibilité (la fusion se fait sur ALL_PROSPECTS_SEED)
+const MISSING_PROSPECTS_SEED = ALL_PROSPECTS_SEED;
 const CAT={
   organisation:{l:'Organisation',i:'📋',c:'#059669'},
   negociation:{l:'Négociation',i:'🤝',c:'#2563eb'},
@@ -726,18 +1031,85 @@ function setSyncStatus(msg,color){
 // ── GOOGLE SHEETS ──
 async function loadData(){
   setSyncStatus('🔄 Chargement...','#d97706');
+  
+  // 🔒 D'abord essayer de restaurer depuis localStorage (sauvegarde locale)
+  let localBackup=[];
   try{
-    const res=await fetch(SCRIPT_URL);
+    const saved=localStorage.getItem('siphro_prospects_backup');
+    if(saved)localBackup=JSON.parse(saved);
+  }catch(e){}
+  
+  try{
+    const res=await fetch(SCRIPT_URL+'?t='+Date.now(),{
+      method:'GET',
+      mode:'cors',
+      cache:'no-cache',
+      headers:{'Accept':'application/json'}
+    });
+    if(!res.ok)throw new Error('HTTP '+res.status);
     const raw=await res.json();
-    prospects=raw.map(parseRow).filter(p=>p.nom).map(enrichProspect);
-    setSyncStatus('✅ Synchronisé','#059669');
+    let remote=raw.map(parseRow).filter(p=>p.nom).map(enrichProspect);
+    
+    // 🔒 PROTECTION : Ne jamais accepter un tableau vide depuis le serveur
+    // Si le serveur retourne 0 prospects et qu'on en avait > 0 localement → garder local
+    if(remote.length===0 && localBackup.length>0){
+      console.warn('⚠️ Serveur retourne 0 prospects — restauration depuis sauvegarde locale');
+      prospects=localBackup.map(enrichProspect);
+      setSyncStatus('⚠️ Données locales','#d97706');
+    }else{
+      prospects=remote;
+      setSyncStatus('✅ Synchronisé','#059669');
+    }
   }catch(e){
-    setSyncStatus('❌ Connexion impossible','#dc2626');
-    showNotif('Impossible de charger depuis Google Sheets','error');
-    prospects=[];
+    console.warn('Sheets inaccessible, chargement local:',e);
+    if(localBackup.length>0){
+      prospects=localBackup.map(enrichProspect);
+      setSyncStatus('📱 Mode hors-ligne','#7c3aed');
+      showNotif('Connexion Sheets impossible — données locales chargées','warning');
+    }else{
+      prospects=[];
+      setSyncStatus('❌ Connexion impossible','#dc2626');
+      showNotif('Impossible de charger les données. Vérifiez la connexion.','error');
+    }
   }
+  
+  // 🔒 FUSION DES PROSPECTS MANQUANTS (26 du salon)
+  mergeMissingProspects();
+  
+  // 🔒 Sauvegarder localement après chaque chargement
+  saveLocalBackup();
+  
   renderAll();
-  if(!syncTimer)syncTimer=setInterval(autoRefresh,20000);
+  if(!syncTimer)syncTimer=setInterval(autoRefresh,30000);
+}
+
+// 🔒 FUSION SÉCURISÉE des prospects initiaux manquants
+function mergeMissingProspects(){
+  const existingNames=new Set(prospects.map(p=>p.nom.toLowerCase().trim()));
+  let added=0;
+  MISSING_PROSPECTS_SEED.forEach(seed=>{
+    const nameKey=seed.nom.toLowerCase().trim();
+    if(!existingNames.has(nameKey)){
+      const np={...seed,id:genId(),createdAt:seed.createdAt||new Date().toISOString()};
+      np.actionsEffectuees=seed.actionsEffectuees||[];
+      prospects.push(enrichProspect(np));
+      existingNames.add(nameKey);
+      added++;
+    }
+  });
+  if(added>0){
+    console.log(`✅ ${added} prospects manquants fusionnés`);
+    // Pousser les nouvelles données vers Sheets
+    saveData();
+  }
+}
+
+// 🔒 SAUVEGARDE LOCALE (backup anti-perte)
+function saveLocalBackup(){
+  try{
+    localStorage.setItem('siphro_prospects_backup',JSON.stringify(prospects));
+    localStorage.setItem('siphro_backup_date',new Date().toISOString());
+  }catch(e){console.warn('localStorage plein:',e);}
 }
 
 async function autoRefresh(){
@@ -745,12 +1117,24 @@ async function autoRefresh(){
     const res=await fetch(SCRIPT_URL+'?t='+Date.now());
     const raw=await res.json();
     const remote=raw.map(parseRow).filter(p=>p.nom).map(enrichProspect);
-    if(JSON.stringify(remote)!==JSON.stringify(prospects)){
+    // 🔒 PROTECTION : Ne jamais remplacer par un tableau vide
+    if(remote.length===0&&prospects.length>0){
+      console.warn('⚠️ Auto-refresh: serveur vide — ignoré pour protéger les données');
+      return;
+    }
+    if(JSON.stringify(remote.map(p=>p.id+p.nom))!==JSON.stringify(prospects.map(p=>p.id+p.nom))){
+      // Fusionner les manquants dans les données fraîches
+      const existingNames=new Set(remote.map(p=>p.nom.toLowerCase().trim()));
+      MISSING_PROSPECTS_SEED.forEach(seed=>{
+        if(!existingNames.has(seed.nom.toLowerCase().trim())){
+          remote.push(enrichProspect({...seed,id:genId()}));
+        }
+      });
       prospects=remote;
+      saveLocalBackup();
       renderAll();
       if(detailOpen){
         const dv=document.getElementById('detail-view');
-        // Refresh detail if open
         const pid=dv.dataset.pid;
         if(pid&&prospects.find(p=>p.id===pid))openDetailView(pid);
       }
@@ -761,15 +1145,22 @@ async function autoRefresh(){
 }
 
 async function saveData(){
+  // 🔒 Ne jamais sauvegarder en mode lecture seule
+  if(document.body.classList.contains('readonly-mode'))return;
   if(isSaving)return;
   isSaving=true;
   setSyncStatus('💾 Sauvegarde...','#d97706');
+  
+  // 🔒 Sauvegarde locale immédiate avant l'envoi réseau
+  saveLocalBackup();
+  
   try{
     await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_all',data:prospects})});
     setSyncStatus('✅ Sauvegardé','#059669');
   }catch(e){
-    setSyncStatus('❌ Erreur sauvegarde','#dc2626');
-    showNotif('Erreur de sauvegarde','error');
+    setSyncStatus('💾 Sauvegardé (local)','#7c3aed');
+    // Ne pas afficher d'erreur — les données sont sauvegardées localement
+    console.warn('Sheets inaccessible — données sauvegardées localement');
   }
   isSaving=false;
 }
@@ -983,7 +1374,7 @@ function renderCard(p){
       ${hc>0?`<span class="score-badge">📜 ${hc} action${hc>1?'s':''}</span>`:''}
     </div>
   </div>
-  <div class="card-acts" onclick="event.stopPropagation()">
+  <div class="card-acts readonly-hide" onclick="event.stopPropagation()">
     <button class="ibt" onclick="editProspect('${p.id}')" title="Modifier">✏️</button>
     <button class="ibt del" onclick="deleteProspect('${p.id}')" title="Supprimer">🗑️</button>
   </div>
@@ -1024,7 +1415,7 @@ function renderListRow(p){
 <div style="font-size:12.5px;color:var(--txt2)">${p.contactNom?esc(p.contactNom):'—'}<br><span style="font-size:11.5px;font-weight:600">${p.contactTel&&p.contactTel!=='-'?esc(p.contactTel):''}</span></div>
 <div style="font-size:12px;color:var(--txt2)">${p.prochaineAction?esc(p.prochaineAction.description):'<em style="color:var(--txt3)">Aucune action</em>'}</div>
 <div>${p.prochaineAction?`<span style="font-size:12px;font-weight:700;color:${urg.cls==='overdue'?'var(--red)':urg.cls==='today'?'var(--orange)':'var(--blue)'}">${urg.ico} ${fmtDate(p.prochaineAction.date)}</span>`:'—'}</div>
-<div class="card-acts" onclick="event.stopPropagation()">
+<div class="card-acts readonly-hide" onclick="event.stopPropagation()">
   <button class="ibt" onclick="editProspect('${p.id}')" title="Modifier">✏️</button>
   ${p.prochaineAction?`<button class="ibt" onclick="completeAction('${p.id}')" title="Effectuée" style="color:var(--green)">✅</button>`:''}
   <button class="ibt del" onclick="deleteProspect('${p.id}')">🗑️</button>
@@ -1579,12 +1970,64 @@ function importData(data){
   saveData();closeImportModal();renderAll();showNotif(`${n} prospect(s) importé(s) ✓`);
 }
 function exportData(){
-  const csv=Papa.unparse(prospects.map(p=>({
-    nom_etablissement:p.nom,contact_nom:p.contactNom||'',contact_telephone:p.contactTel||'',contact_email:p.contactEmail||'',adresse:p.adresse||'',siret:p.siret||'',categorie:p.categorie,formation_visee:p.formation||'',commentaire:p.commentaire||'',prochaine_action:p.prochaineAction?.description||'',date_prochaine_action:p.prochaineAction?.date||'',actions_effectuees_count:p.actionsEffectuees?.length||0,derniere_action:p.actionsEffectuees?.length?p.actionsEffectuees[p.actionsEffectuees.length-1].description:''
-  })),{delimiter:';'});
-  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='siphro-export-'+new Date().toISOString().split('T')[0]+'.csv';a.click();URL.revokeObjectURL(url);
-  showNotif('Export CSV téléchargé ✓');
+  // 🔒 EXPORT SÉCURISÉ — Tous les prospects, sans exception
+  const allProspects=[...prospects]; // snapshot complet
+  if(!allProspects.length){showNotif('Aucun prospect à exporter','warning');return;}
+  
+  // Génération CSV robuste avec gestion des caractères spéciaux
+  function csvCell(v){
+    const s=String(v==null?'':v);
+    // Si contient virgule, guillemet ou saut de ligne → entourer de guillemets
+    if(s.includes(';')||s.includes('"')||s.includes('\n')||s.includes('\r')){
+      return'"'+s.replace(/"/g,'""')+'"';
+    }
+    return s;
+  }
+  
+  const headers=['nom_etablissement','contact_nom','contact_telephone','contact_email','adresse','siret','categorie','formation_visee','commentaire','prochaine_action','date_prochaine_action','heure_debut','heure_fin','nb_actions_effectuees','derniere_action','date_creation','id'];
+  
+  const rows=allProspects.map(p=>[
+    p.nom||'',
+    p.contactNom||'',
+    p.contactTel||'',
+    p.contactEmail||'',
+    p.adresse||'',
+    p.siret||'',
+    p.categorie||'',
+    p.formation||'',
+    p.commentaire||'',
+    p.prochaineAction?.description||'',
+    p.prochaineAction?.date||'',
+    p.prochaineAction?.hstart||'',
+    p.prochaineAction?.hend||'',
+    String(p.actionsEffectuees?.length||0),
+    p.actionsEffectuees?.length?p.actionsEffectuees[p.actionsEffectuees.length-1].description:'',
+    p.createdAt||'',
+    p.id||''
+  ].map(csvCell).join(';'));
+  
+  const csv='\ufeff'+headers.join(';')+'\r\n'+rows.join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='siphro-export-'+new Date().toISOString().split('T')[0]+'-'+allProspects.length+'prospects.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showNotif(`✅ Export CSV — ${allProspects.length} prospects téléchargés`);
+  console.log(`[EXPORT] ${allProspects.length} prospects exportés`);
+}
+
+function showBackupInfo(){
+  try{
+    const bd=localStorage.getItem('siphro_backup_date');
+    const bp=localStorage.getItem('siphro_prospects_backup');
+    const count=bp?JSON.parse(bp).length:0;
+    const dateStr=bd?new Date(bd).toLocaleString('fr-FR'):'Aucune';
+    showNotif(`🔒 ${count} prospects sauvegardés — Dernière MAJ: ${dateStr}`,'info');
+  }catch(e){showNotif('Informations de sauvegarde indisponibles','warning');}
 }
 
 // ── NOTIF ──
@@ -1619,9 +2062,92 @@ document.addEventListener('click',e=>{
   if(dd&&!dd.contains(e.target)&&e.target.id!=='action-prospect-search')dd.style.display='none';
 });
 
-// ── INIT ──
+// ── LANDING PAGE ──
+function initLandingPage(){
+  const params=new URLSearchParams(window.location.search);
+  const mode=params.get('mode');
+  const readonly=params.get('readonly');
+  
+  // Si déjà en mode explicite → skip landing
+  if(mode==='admin'||mode==='view'||readonly==='1'){
+    hideLanding();
+    return;
+  }
+  
+  // Afficher la date
+  const d=new Date();
+  const el=document.getElementById('lp-date');
+  if(el)el.textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  
+  // Bouton Admin
+  document.getElementById('lp-admin-btn').addEventListener('click',function(e){
+    e.preventDefault();
+    hideLanding('admin');
+  });
+  
+  // Bouton Collaborateur  
+  document.getElementById('lp-collab-btn').addEventListener('click',function(e){
+    e.preventDefault();
+    hideLanding('readonly');
+  });
+}
+
+function hideLanding(mode){
+  const landing=document.getElementById('landing');
+  if(!landing)return;
+  
+  landing.style.transition='opacity .5s ease, transform .5s ease';
+  landing.style.opacity='0';
+  landing.style.transform='scale(1.04)';
+  
+  setTimeout(()=>{
+    landing.classList.add('hidden');
+    if(mode==='readonly'){
+      activateReadonlyMode();
+    }
+    // Mettre à jour les stats landing après chargement
+    updateLandingStats();
+  },480);
+}
+
+function activateReadonlyMode(){
+  document.body.classList.add('readonly-mode');
+  window.openProspectModal=()=>null;
+  window.editProspect=()=>null;
+  window.deleteProspect=()=>null;
+  window.openActionModal=()=>null;
+  window.openImportModal=()=>null;
+  window.completeAction=()=>null;
+  window.changeCat=()=>null;
+  window.handleProspectSubmit=()=>null;
+  window.handleActionSubmit=()=>null;
+  window.confirmCompleteAction=()=>null;
+}
+
+function updateLandingStats(){
+  // Met à jour les chiffres dans la landing (si elle était encore visible)
+  const chaudEl=document.getElementById('lp-chaud-count');
+  const actEl=document.getElementById('lp-actions-count');
+  if(chaudEl)chaudEl.textContent=prospects.filter(p=>p.categorie==='chaud').length;
+  if(actEl)actEl.textContent=prospects.filter(p=>p.prochaineAction).length;
+}
+
 // ── INIT ──
 document.addEventListener('DOMContentLoaded',()=>{
+  // Détection URL directe (liens partagés)
+  const params=new URLSearchParams(window.location.search);
+  const isReadonly=params.get('readonly')==='1'||params.get('mode')==='view';
+  const isAdmin=params.get('mode')==='admin';
+  
+  // Init landing page (gère les boutons et l'animation)
+  initLandingPage();
+  
+  // Si readonly via URL directe (lien collaborateur)
+  if(isReadonly){
+    activateReadonlyMode();
+    console.log('👁️ Mode lecture seule activé via URL');
+  }
+  
   // Charger l'historique des suppressions depuis localStorage
   try{
     const saved=localStorage.getItem('siphro_deleted_prospects');
@@ -1629,7 +2155,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     console.log(`📋 ${deletedProspects.length} prospects supprimés en historique`);
   }catch(e){console.warn('Erreur chargement suppressions:',e);}
   
-  loadData();
+  // Charger les données (en arrière-plan pendant que la landing est visible)
+  loadData().then(()=>{
+    updateLandingStats();
+  }).catch(()=>{
+    updateLandingStats();
+  });
 });
 </script>
 </body>
