@@ -1,4 +1,4 @@
-[index (1).html](https://github.com/user-attachments/files/25422855/index.1.html)
+[index (2).html](https://github.com/user-attachments/files/25441042/index.2.html)
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -427,6 +427,9 @@ body.readonly-mode .list-row:hover{cursor:default}
 body.readonly-mode .readonly-banner{display:flex}
 .ro-badge{background:#3b82f6;color:#fff;font-size:10px;padding:2px 10px;border-radius:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
 
+/* ── BADGE SAUVEGARDE EN ATTENTE ── */
+@keyframes badgePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.8;transform:scale(1.03)}}
+
 /* ════════════════════════════════════════════
    PAGE D'ACCUEIL — SIPHRO CRM
 ═══════════════════════════════════════════════ */
@@ -740,6 +743,7 @@ body.readonly-mode .readonly-banner{display:flex}
         <!-- Actions -->
         <div class="tb-actions">
           <span class="sync-pill" id="sync-badge">🔄</span>
+          <span id="unsaved-badge" style="display:none;font-size:11px;font-weight:700;padding:5px 10px;background:#fef3c7;border:1.5px solid #f59e0b;border-radius:16px;color:#92400e;cursor:pointer;animation:badgePulse 2s ease-in-out infinite" onclick="pushToSheets()" title="Cliquer pour forcer la sync maintenant"></span>
           <button class="btn btn-secondary btn-sm readonly-hide" onclick="openImportModal()">📥</button>
           <button class="btn btn-primary btn-sm readonly-hide" onclick="openProspectModal()">＋ Prospect</button>
         </div>
@@ -1101,75 +1105,138 @@ let agView='week';
 let agOffset=0;
 let agDayOffset=0;
 let isSaving=false;
+let pendingSave=false;
+let pendingSaveTimer=null;
+let saveRetryCount=0;
+const MAX_RETRY=4;
+let lastSuccessfulSheetsSync=null;
+let unsavedChanges=0;
+const LS_KEY="siphro_v5_data";
+const LS_PENDING_KEY="siphro_v5_pending";
 let syncTimer=null;
 let detailOpen=false;
 let completePid=null;
 
-// ── SYNC STATUS ──
-function setSyncStatus(msg,color){
+// ══════════════════════════════════════════════
+// 🔒 MOTEUR DE SYNC V5 — FIABLE
+// localStorage = SOURCE DE VÉRITÉ PRINCIPALE
+// Google Sheets = miroir secondaire avec retry
+// ══════════════════════════════════════════════
+
+// ── INDICATEUR DE STATUT ──
+function setSyncStatus(msg,color,pending){
   ['sb-sync','sync-badge','sync-badge2'].forEach(id=>{
     const e=document.getElementById(id);
-    if(e){e.textContent=msg;if(color)e.style.color=color;}
+    if(e){
+      e.textContent=msg;
+      if(color)e.style.color=color;
+      e.style.fontWeight=pending?'800':'600';
+    }
   });
 }
 
-// ── GOOGLE SHEETS ──
-async function loadData(){
-  setSyncStatus('🔄 Chargement...','#d97706');
-  
-  // 🔒 D'abord essayer de restaurer depuis localStorage (sauvegarde locale)
-  let localBackup=[];
+// ── SAUVEGARDE LOCALE IMMÉDIATE (toujours synchrone) ──
+function saveLocalNow(){
   try{
-    const saved=localStorage.getItem('siphro_prospects_backup');
-    if(saved)localBackup=JSON.parse(saved);
-  }catch(e){}
-  
-  try{
-    const res=await fetch(SCRIPT_URL+'?t='+Date.now(),{
-      method:'GET',
-      mode:'cors',
-      cache:'no-cache',
-      headers:{'Accept':'application/json'}
-    });
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const raw=await res.json();
-    let remote=raw.map(parseRow).filter(p=>p.nom).map(enrichProspect);
-    
-    // 🔒 PROTECTION : Ne jamais accepter un tableau vide depuis le serveur
-    // Si le serveur retourne 0 prospects et qu'on en avait > 0 localement → garder local
-    if(remote.length===0 && localBackup.length>0){
-      console.warn('⚠️ Serveur retourne 0 prospects — restauration depuis sauvegarde locale');
-      prospects=localBackup.map(enrichProspect);
-      setSyncStatus('⚠️ Données locales','#d97706');
-    }else{
-      prospects=remote;
-      setSyncStatus('✅ Synchronisé','#059669');
-    }
+    localStorage.setItem(LS_KEY,JSON.stringify(prospects));
+    localStorage.setItem(LS_KEY+'_date',new Date().toISOString());
+    // Rétro-compatibilité avec l'ancienne clé
+    localStorage.setItem('siphro_prospects_backup',JSON.stringify(prospects));
+    localStorage.setItem('siphro_backup_date',new Date().toISOString());
   }catch(e){
-    console.warn('Sheets inaccessible, chargement local:',e);
-    if(localBackup.length>0){
-      prospects=localBackup.map(enrichProspect);
-      setSyncStatus('📱 Mode hors-ligne','#7c3aed');
-      showNotif('Connexion Sheets impossible — données locales chargées','warning');
-    }else{
-      prospects=[];
-      setSyncStatus('❌ Connexion impossible','#dc2626');
-      showNotif('Impossible de charger les données. Vérifiez la connexion.','error');
-    }
+    console.warn('localStorage plein ou bloqué:',e);
   }
-  
-  // 🔒 FUSION DES PROSPECTS MANQUANTS (26 du salon)
-  mergeMissingProspects();
-  
-  // 🔒 Sauvegarder localement après chaque chargement
-  saveLocalBackup();
-  
-  renderAll();
-  if(!syncTimer)syncTimer=setInterval(autoRefresh,30000);
+}
+// Alias pour compatibilité avec les appels existants
+function saveLocalBackup(){saveLocalNow();}
+
+// ── CHARGER DEPUIS LOCAL ──
+function loadFromLocal(){
+  try{
+    const v5=localStorage.getItem(LS_KEY);
+    if(v5){const d=JSON.parse(v5);if(d&&d.length>0)return d;}
+    // Fallback ancienne clé
+    const old=localStorage.getItem('siphro_prospects_backup');
+    if(old){const d=JSON.parse(old);if(d&&d.length>0)return d;}
+  }catch(e){}
+  return[];
 }
 
-// 🔒 FUSION SÉCURISÉE des prospects initiaux manquants
-function mergeMissingProspects(){
+// ── CHARGER LES DONNÉES ──
+async function loadData(){
+  setSyncStatus('🔄 Chargement...','#d97706',false);
+
+  // ÉTAPE 1 : charger immédiatement depuis local (zéro délai pour l'utilisateur)
+  const localData=loadFromLocal();
+  if(localData.length>0){
+    prospects=localData.map(enrichProspect);
+    mergeMissingProspects(false); // fusion sans re-save immédiat
+    renderAll();
+    setSyncStatus(`📱 Local (${prospects.length})`,'#7c3aed',false);
+  }
+
+  // ÉTAPE 2 : essayer de charger depuis Sheets en arrière-plan
+  try{
+    const ctrl=new AbortController();
+    const timeout=setTimeout(()=>ctrl.abort(),8000); // 8s max
+    const res=await fetch(SCRIPT_URL+'?t='+Date.now(),{
+      method:'GET',mode:'cors',cache:'no-cache',
+      headers:{'Accept':'application/json'},
+      signal:ctrl.signal
+    });
+    clearTimeout(timeout);
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const raw=await res.json();
+
+    // Vérifier que c'est bien un tableau (pas un objet d'erreur)
+    if(!Array.isArray(raw)){
+      if(raw.error)throw new Error('Sheets: '+raw.error);
+      throw new Error('Réponse inattendue');
+    }
+
+    const remote=raw.map(parseRow).filter(p=>p.nom).map(enrichProspect);
+
+    // RÈGLE : ne jamais accepter moins de prospects que ce qu'on a localement
+    // (protection contre un Sheet vide accidentellement)
+    if(remote.length>0 && remote.length>=Math.max(1,prospects.length-5)){
+      // Sheets a plus ou autant de données → utiliser Sheets
+      prospects=remote;
+      mergeMissingProspects(false);
+      saveLocalNow(); // Mettre à jour le local avec les données fraîches
+      renderAll();
+      setSyncStatus(`✅ Synchronisé (${prospects.length})`,'#059669',false);
+      lastSuccessfulSheetsSync=Date.now();
+    }else if(remote.length>0 && remote.length<prospects.length){
+      // Sheets a MOINS de prospects que local → local est plus complet
+      // Déclencher une re-sync immédiate pour mettre Sheets à jour
+      console.warn(`⚠️ Sheets(${remote.length}) < Local(${prospects.length}) — push local → Sheets`);
+      setSyncStatus(`⚠️ Sync en cours...`,'#d97706',true);
+      await pushToSheets();
+    }else{
+      // Sheets vide et local vide → situation initiale normale
+      mergeMissingProspects(false);
+      saveLocalNow();
+      renderAll();
+      setSyncStatus(`✅ Prêt (${prospects.length})`,'#059669',false);
+    }
+
+  }catch(e){
+    // Sheets inaccessible — les données locales sont déjà chargées, on continue
+    const reason=e.name==='AbortError'?'Timeout':'Hors ligne';
+    console.warn(`Sheets inaccessible (${reason}):`,e.message);
+    if(localData.length>0){
+      setSyncStatus(`📱 ${reason} — Local OK`,'#7c3aed',false);
+    }else{
+      setSyncStatus('⚠️ Sans connexion','#d97706',false);
+    }
+  }
+
+  // Démarrer l'auto-refresh (60s — plus doux)
+  if(!syncTimer)syncTimer=setInterval(autoRefresh,60000);
+}
+
+// ── FUSION PROSPECTS INITIAUX ──
+function mergeMissingProspects(andSave=true){
   const existingNames=new Set(prospects.map(p=>p.nom.toLowerCase().trim()));
   let added=0;
   MISSING_PROSPECTS_SEED.forEach(seed=>{
@@ -1183,71 +1250,191 @@ function mergeMissingProspects(){
     }
   });
   if(added>0){
-    console.log(`✅ ${added} prospects manquants fusionnés`);
-    // Pousser les nouvelles données vers Sheets
-    saveData();
+    console.log(`✅ ${added} prospects fusionnés`);
+    if(andSave)scheduleSheetsSave();
   }
 }
 
-// 🔒 SAUVEGARDE LOCALE (backup anti-perte)
-function saveLocalBackup(){
-  try{
-    localStorage.setItem('siphro_prospects_backup',JSON.stringify(prospects));
-    localStorage.setItem('siphro_backup_date',new Date().toISOString());
-  }catch(e){console.warn('localStorage plein:',e);}
+// ══════════════════════════════════════════════
+// 🔒 MOTEUR DE SAUVEGARDE VERS SHEETS
+// Corrige les 3 bugs critiques :
+// Bug 1 : mode:'no-cors' → remplacé par cors + vérification réelle
+// Bug 2 : autoRefresh écrasait les modifs → bloqué pendant sauvegarde
+// Bug 3 : pas de retry → 4 tentatives avec délai exponentiel
+// ══════════════════════════════════════════════
+
+// ENTRÉE PRINCIPALE : appelée par toute modification utilisateur
+function saveData(){
+  if(document.body.classList.contains('readonly-mode'))return;
+
+  // 1. SAUVEGARDE LOCALE IMMÉDIATE — toujours, synchrone, fiable
+  saveLocalNow();
+  unsavedChanges++;
+  updateSaveIndicator();
+
+  // 2. DEBOUNCE : attendre 800ms d'inactivité avant d'envoyer à Sheets
+  //    (évite d'envoyer 10 requêtes pour une seule action complexe)
+  if(pendingSaveTimer)clearTimeout(pendingSaveTimer);
+  pendingSaveTimer=setTimeout(()=>{
+    scheduleSheetsSave();
+  },800);
 }
 
+// Planifier l'envoi vers Sheets
+function scheduleSheetsSave(){
+  if(isSaving){
+    // Déjà en cours → replanifier après fin
+    pendingSave=true;
+    return;
+  }
+  pushToSheets();
+}
+
+// Envoi réel vers Google Sheets avec retry
+async function pushToSheets(){
+  if(document.body.classList.contains('readonly-mode'))return;
+  isSaving=true;
+  setSyncStatus('💾 Sync Sheets...','#d97706',true);
+
+  const snapshot=JSON.parse(JSON.stringify(prospects)); // copie figée au moment de l'envoi
+  let success=false;
+
+  for(let attempt=1;attempt<=MAX_RETRY;attempt++){
+    try{
+      const ctrl=new AbortController();
+      const timeout=setTimeout(()=>ctrl.abort(),10000);
+
+      const res=await fetch(SCRIPT_URL,{
+        method:'POST',
+        // ✅ FIX BUG 1 : mode:'cors' au lieu de 'no-cors'
+        // Avec no-cors on ne peut jamais savoir si ça a marché
+        mode:'cors',
+        cache:'no-cache',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({action:'save_all',data:snapshot}),
+        signal:ctrl.signal
+      });
+      clearTimeout(timeout);
+
+      // Lire la réponse pour vérifier que Apps Script a bien accepté
+      const text=await res.text().catch(()=>'');
+      const isOk=text.startsWith('ok:')||text==='ok';
+
+      if(isOk){
+        success=true;
+        unsavedChanges=0;
+        saveRetryCount=0;
+        lastSuccessfulSheetsSync=Date.now();
+        updateSaveIndicator();
+        setSyncStatus(`✅ Sauvegardé (${snapshot.length})`,'#059669',false);
+        console.log(`✅ Sheets: ${snapshot.length} prospects sauvegardés (tentative ${attempt})`);
+        break;
+      }else{
+        throw new Error(`Apps Script a répondu: ${text.substring(0,80)}`);
+      }
+
+    }catch(e){
+      const isTimeout=e.name==='AbortError';
+      const isCors=e.message.includes('CORS')||e.message.includes('Failed to fetch');
+      console.warn(`⚠️ Tentative ${attempt}/${MAX_RETRY} échouée:`,e.message);
+
+      if(attempt<MAX_RETRY){
+        // Délai exponentiel : 1s, 2s, 4s
+        const delay=Math.pow(2,attempt-1)*1000;
+        setSyncStatus(`🔄 Retry ${attempt+1}/${MAX_RETRY}...`,'#d97706',true);
+        await new Promise(r=>setTimeout(r,delay));
+      }else{
+        // Toutes les tentatives ont échoué
+        saveRetryCount++;
+        setSyncStatus(`💾 Local ✓ (Sheets ✗)`,'#7c3aed',true);
+        // Marquer comme "en attente" pour retry au prochain autoRefresh
+        try{localStorage.setItem(LS_PENDING_KEY,'1');}catch(e2){}
+
+        if(isCors){
+          showNotif('⚠️ Problème CORS — vérifiez le déploiement Apps Script','warning');
+        }else if(isTimeout){
+          showNotif('⏱️ Timeout Sheets — données sauvegardées localement','warning');
+        }else{
+          showNotif('💾 Données sauvegardées localement. Retry à la prochaine action.','info');
+        }
+      }
+    }
+  }
+
+  isSaving=false;
+
+  // S'il y avait un save en attente pendant qu'on sauvegardait → le faire maintenant
+  if(pendingSave){
+    pendingSave=false;
+    saveLocalNow(); // Re-sauvegarder le local (peut avoir changé)
+    setTimeout(()=>pushToSheets(),500);
+  }
+}
+
+// Indicateur visuel de modifications non confirmées
+function updateSaveIndicator(){
+  const badge=document.getElementById('unsaved-badge');
+  if(!badge)return;
+  if(unsavedChanges>0){
+    badge.style.display='flex';
+    badge.textContent=`💾 ${unsavedChanges} modif. en attente`;
+  }else{
+    badge.style.display='none';
+  }
+}
+
+// ── AUTO-REFRESH (lecture seule depuis Sheets, ne remplace jamais le local) ──
 async function autoRefresh(){
+  // ✅ FIX BUG 2 : ne pas rafraîchir si une sauvegarde est en cours
+  if(isSaving||pendingSave)return;
+
+  // S'il y a des saves en attente depuis la dernière fois → réessayer
   try{
-    const res=await fetch(SCRIPT_URL+'?t='+Date.now());
-    const raw=await res.json();
-    const remote=raw.map(parseRow).filter(p=>p.nom).map(enrichProspect);
-    // 🔒 PROTECTION : Ne jamais remplacer par un tableau vide
-    if(remote.length===0&&prospects.length>0){
-      console.warn('⚠️ Auto-refresh: serveur vide — ignoré pour protéger les données');
+    const hasPending=localStorage.getItem(LS_PENDING_KEY);
+    if(hasPending){
+      localStorage.removeItem(LS_PENDING_KEY);
+      console.log('🔄 Retry sauvegarde en attente...');
+      await pushToSheets();
       return;
     }
-    if(JSON.stringify(remote.map(p=>p.id+p.nom))!==JSON.stringify(prospects.map(p=>p.id+p.nom))){
-      // Fusionner les manquants dans les données fraîches
-      const existingNames=new Set(remote.map(p=>p.nom.toLowerCase().trim()));
-      MISSING_PROSPECTS_SEED.forEach(seed=>{
-        if(!existingNames.has(seed.nom.toLowerCase().trim())){
-          remote.push(enrichProspect({...seed,id:genId()}));
-        }
-      });
-      prospects=remote;
-      saveLocalBackup();
-      renderAll();
-      if(detailOpen){
-        const dv=document.getElementById('detail-view');
-        const pid=dv.dataset.pid;
-        if(pid&&prospects.find(p=>p.id===pid))openDetailView(pid);
-      }
-      setSyncStatus('🔄 Mis à jour','#2563eb');
-      setTimeout(()=>setSyncStatus('✅ Synchronisé','#059669'),2000);
-    }
   }catch(e){}
-}
 
-async function saveData(){
-  // 🔒 Ne jamais sauvegarder en mode lecture seule
-  if(document.body.classList.contains('readonly-mode'))return;
-  if(isSaving)return;
-  isSaving=true;
-  setSyncStatus('💾 Sauvegarde...','#d97706');
-  
-  // 🔒 Sauvegarde locale immédiate avant l'envoi réseau
-  saveLocalBackup();
-  
+  // Rafraîchissement doux : ne remplace que si Sheets a PLUS de données
   try{
-    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_all',data:prospects})});
-    setSyncStatus('✅ Sauvegardé','#059669');
+    const ctrl=new AbortController();
+    setTimeout(()=>ctrl.abort(),6000);
+    const res=await fetch(SCRIPT_URL+'?t='+Date.now(),{
+      method:'GET',mode:'cors',cache:'no-cache',
+      headers:{'Accept':'application/json'},
+      signal:ctrl.signal
+    });
+    if(!res.ok)return;
+    const raw=await res.json();
+    if(!Array.isArray(raw)||raw.length===0)return;
+    const remote=raw.map(parseRow).filter(p=>p.nom).map(enrichProspect);
+
+    // Ne mettre à jour que si Sheets a des données fraîches et plus complètes
+    if(remote.length>=prospects.length&&remote.length>0){
+      // Comparer les IDs pour voir s'il y a de vraies différences
+      const remoteIds=new Set(remote.map(p=>p.id));
+      const localIds=new Set(prospects.map(p=>p.id));
+      const hasNew=[...remoteIds].some(id=>!localIds.has(id));
+      if(hasNew){
+        prospects=remote;
+        mergeMissingProspects(false);
+        saveLocalNow();
+        renderAll();
+        if(detailOpen){
+          const dv=document.getElementById('detail-view');
+          const pid=dv?.dataset?.pid;
+          if(pid&&prospects.find(p=>p.id===pid))openDetailView(pid);
+        }
+        setSyncStatus(`✅ Synchronisé (${prospects.length})`,'#059669',false);
+      }
+    }
   }catch(e){
-    setSyncStatus('💾 Sauvegardé (local)','#7c3aed');
-    // Ne pas afficher d'erreur — les données sont sauvegardées localement
-    console.warn('Sheets inaccessible — données sauvegardées localement');
+    // Silencieux — l'auto-refresh est une fonctionnalité secondaire
   }
-  isSaving=false;
 }
 
 function parseRow(row){
@@ -2110,11 +2297,14 @@ function exportData(){
 
 function showBackupInfo(){
   try{
-    const bd=localStorage.getItem('siphro_backup_date');
-    const bp=localStorage.getItem('siphro_prospects_backup');
-    const count=bp?JSON.parse(bp).length:0;
-    const dateStr=bd?new Date(bd).toLocaleString('fr-FR'):'Aucune';
-    showNotif(`🔒 ${count} prospects sauvegardés — Dernière MAJ: ${dateStr}`,'info');
+    const bd=localStorage.getItem(LS_KEY+'_date')||localStorage.getItem('siphro_backup_date');
+    const bp=loadFromLocal();
+    const count=bp.length;
+    const dateStr=bd?new Date(bd).toLocaleString('fr-FR'):'Jamais';
+    const hasPending=localStorage.getItem(LS_PENDING_KEY);
+    const sheetsStr=lastSuccessfulSheetsSync?new Date(lastSuccessfulSheetsSync).toLocaleString('fr-FR'):'Cette session';
+    const msg=`💾 ${count} prospects — Local: ${dateStr}${hasPending?' ⚠️ Sync en attente':' ✅'} — Sheets: ${sheetsStr}`;
+    showNotif(msg,'info');
   }catch(e){showNotif('Informations de sauvegarde indisponibles','warning');}
 }
 
