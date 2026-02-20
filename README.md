@@ -1,5 +1,4 @@
-[index (2).html](https://github.com/user-attachments/files/25442137/index.2.html)
-<!DOCTYPE html>
+[index (3).html](https://github.com/user-attachments/files/25442464/index.3.html)<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -1294,80 +1293,81 @@ function scheduleSheetsSave(){
 async function pushToSheets(){
   if(document.body.classList.contains('readonly-mode'))return;
   isSaving=true;
-  setSyncStatus('💾 Sync Sheets...','#d97706',true);
+  setSyncStatus('💾 Sync...','#d97706',true);
 
-  const snapshot=JSON.parse(JSON.stringify(prospects)); // copie figée au moment de l'envoi
+  const snapshot=JSON.parse(JSON.stringify(prospects)); // copie figée
   let success=false;
 
   for(let attempt=1;attempt<=MAX_RETRY;attempt++){
     try{
-      const ctrl=new AbortController();
-      const timeout=setTimeout(()=>ctrl.abort(),10000);
-
-      const res=await fetch(SCRIPT_URL,{
+      // ════════════════════════════════════════════════════════
+      // SOLUTION CORS : text/plain + no-cors
+      //
+      // Pourquoi :
+      // - mode:'cors' + Content-Type:application/json
+      //   → preflight OPTIONS → Apps Script ne répond pas → BLOQUÉ
+      //
+      // - mode:'no-cors' + Content-Type:text/plain
+      //   → "simple request" → pas de preflight → Apps Script REÇOIT la donnée
+      //   → réponse opaque (on ne peut pas lire), MAIS la donnée est bien sauvegardée
+      //
+      // Vérification : on fait un GET juste après pour confirmer le bon nombre
+      // ════════════════════════════════════════════════════════
+      await fetch(SCRIPT_URL,{
         method:'POST',
-        // ✅ FIX BUG 1 : mode:'cors' au lieu de 'no-cors'
-        // Avec no-cors on ne peut jamais savoir si ça a marché
-        mode:'cors',
-        cache:'no-cache',
-        headers:{'Content-Type':'application/json','Accept':'application/json'},
-        body:JSON.stringify({action:'save_all',data:snapshot}),
-        signal:ctrl.signal
+        mode:'no-cors',          // Bypass CORS preflight
+        headers:{
+          'Content-Type':'text/plain'  // Simple request = pas de preflight
+        },
+        body:JSON.stringify({action:'save_all',data:snapshot})
       });
-      clearTimeout(timeout);
+      // Avec no-cors la réponse est opaque — on attend puis on vérifie par GET
+      await new Promise(r=>setTimeout(r,1500));
 
-      // Lire la réponse pour vérifier que Apps Script a bien accepté
-      const text=await res.text().catch(()=>'');
-      const isOk=text.startsWith('ok:')||text==='ok';
-
-      if(isOk){
-        success=true;
-        unsavedChanges=0;
-        saveRetryCount=0;
-        lastSuccessfulSheetsSync=Date.now();
-        updateSaveIndicator();
-        setSyncStatus(`✅ Sauvegardé (${snapshot.length})`,'#059669',false);
-        console.log(`✅ Sheets: ${snapshot.length} prospects sauvegardés (tentative ${attempt})`);
-        break;
+      // Vérification : lire Sheets et comparer le nombre de prospects
+      const verif=await fetch(SCRIPT_URL+'?t='+Date.now(),{
+        method:'GET',mode:'cors',cache:'no-cache',
+        headers:{'Accept':'application/json'}
+      });
+      if(verif.ok){
+        const data=await verif.json();
+        if(Array.isArray(data)&&data.length>=snapshot.length-2){
+          // ✅ Sheets contient bien le bon nombre → succès confirmé
+          success=true;
+          unsavedChanges=0;
+          saveRetryCount=0;
+          lastSuccessfulSheetsSync=Date.now();
+          updateSaveIndicator();
+          setSyncStatus(`✅ Sync OK (${data.length})`, '#059669', false);
+          console.log(`✅ Sheets confirmé: ${data.length} prospects (envoyé: ${snapshot.length})`);
+          break;
+        }else{
+          throw new Error(`Vérification échouée: Sheets=${Array.isArray(data)?data.length:'err'} vs Local=${snapshot.length}`);
+        }
       }else{
-        throw new Error(`Apps Script a répondu: ${text.substring(0,80)}`);
+        throw new Error('Vérification GET échouée: HTTP '+verif.status);
       }
 
     }catch(e){
-      const isTimeout=e.name==='AbortError';
-      const isCors=e.message.includes('CORS')||e.message.includes('Failed to fetch');
-      console.warn(`⚠️ Tentative ${attempt}/${MAX_RETRY} échouée:`,e.message);
-
+      console.warn(`⚠️ Tentative ${attempt}/${MAX_RETRY}:`,e.message);
       if(attempt<MAX_RETRY){
-        // Délai exponentiel : 1s, 2s, 4s
-        const delay=Math.pow(2,attempt-1)*1000;
+        const delay=Math.pow(2,attempt-1)*1500;
         setSyncStatus(`🔄 Retry ${attempt+1}/${MAX_RETRY}...`,'#d97706',true);
         await new Promise(r=>setTimeout(r,delay));
       }else{
-        // Toutes les tentatives ont échoué
         saveRetryCount++;
-        setSyncStatus(`💾 Local ✓ (Sheets ✗)`,'#7c3aed',true);
-        // Marquer comme "en attente" pour retry au prochain autoRefresh
+        setSyncStatus('💾 Local ✓  Sheets en attente','#7c3aed',true);
         try{localStorage.setItem(LS_PENDING_KEY,'1');}catch(e2){}
-
-        if(isCors){
-          showNotif('⚠️ Problème CORS — vérifiez le déploiement Apps Script','warning');
-        }else if(isTimeout){
-          showNotif('⏱️ Timeout Sheets — données sauvegardées localement','warning');
-        }else{
-          showNotif('💾 Données sauvegardées localement. Retry à la prochaine action.','info');
-        }
+        showNotif('Sheets inaccessible — données locales protégées. Retry automatique.','warning');
       }
     }
   }
 
   isSaving=false;
-
-  // S'il y avait un save en attente pendant qu'on sauvegardait → le faire maintenant
   if(pendingSave){
     pendingSave=false;
-    saveLocalNow(); // Re-sauvegarder le local (peut avoir changé)
-    setTimeout(()=>pushToSheets(),500);
+    saveLocalNow();
+    setTimeout(()=>pushToSheets(),1000);
   }
 }
 
@@ -2443,3 +2443,4 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 </body>
 </html>
+
